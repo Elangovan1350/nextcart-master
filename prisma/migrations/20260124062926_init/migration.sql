@@ -1,6 +1,3 @@
--- CreateEnum
-CREATE TYPE "Role" AS ENUM ('user', 'admin');
-
 -- CreateTable
 CREATE TABLE "Task" (
     "id" SERIAL NOT NULL,
@@ -17,14 +14,10 @@ CREATE TABLE "user" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'user',
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "banned" BOOLEAN DEFAULT false,
-    "banReason" TEXT,
-    "banExpires" TIMESTAMP(3),
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -39,7 +32,6 @@ CREATE TABLE "session" (
     "ipAddress" TEXT,
     "userAgent" TEXT,
     "userId" TEXT NOT NULL,
-    "impersonatedBy" TEXT,
 
     CONSTRAINT "session_pkey" PRIMARY KEY ("id")
 );
