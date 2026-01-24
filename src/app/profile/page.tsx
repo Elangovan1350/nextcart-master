@@ -147,6 +147,15 @@ const ProfilePage = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Change Password Button */}
+            {session.user.role === "admin" && (
+              <button
+                onClick={() => router.push("/admin")}
+                className="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105"
+              >
+                <Shield className="w-5 h-5" />
+                Admin Dashboard
+              </button>
+            )}
             <button
               onClick={() => router.push("/change-password")}
               className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105"

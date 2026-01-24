@@ -13,7 +13,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 export const auth = betterAuth({
-  plugins: [admin()],
+  plugins: [
+    admin({
+      defaultRole: "user", // Explicitly set the default for new signups
+      adminRole: "admin", // Define what the admin role is called
+    }),
+  ],
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {

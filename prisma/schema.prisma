@@ -21,12 +21,6 @@ model Task {
   updatedAt DateTime @updatedAt
 }
 
-enum Role {
-  user
-  admin
-  modarator
-}
-
 model User {
   id            String     @id
   name          String
@@ -40,7 +34,7 @@ model User {
   orders        Order[]
   cartItems     CartItem[]
 
-  role       Role      @default(user)
+  role       String?
   banned     Boolean?  @default(false)
   banReason  String?
   banExpires DateTime?
