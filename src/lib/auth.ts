@@ -1,5 +1,7 @@
 import "dotenv/config";
 import { betterAuth } from "better-auth";
+import { admin } from "better-auth/plugins";
+
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import nodemailer from "nodemailer";
@@ -11,6 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 export const auth = betterAuth({
+  plugins: [admin()],
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
