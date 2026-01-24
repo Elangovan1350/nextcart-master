@@ -42,13 +42,7 @@ export const auth = betterAuth({
   emailVerification: {
     sendOnSignIn: true,
 
-    sendVerificationEmail: async ({
-      user,
-      url,
-    }: {
-      user: { email: string };
-      url: string;
-    }) => {
+    sendVerificationEmail: async ({ user, url }) => {
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: user.email,

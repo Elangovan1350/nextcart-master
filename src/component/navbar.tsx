@@ -2,7 +2,7 @@
 import { signOut, useSession } from "@/lib/auth-client";
 import useStore from "@/store/usestore";
 import axios from "axios";
-import { ShoppingCart, Menu, MenuIcon } from "lucide-react";
+import { ShoppingCart, Menu, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -56,7 +56,11 @@ const navbar = () => {
             className="text-slate-300 hover:text-white transition"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <MenuIcon className="w-6 h-6" />
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
         <div className="hidden sm:flex  gap-6 ">
