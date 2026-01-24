@@ -160,14 +160,16 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 p-6">
+    <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-white">Product Management</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white">
+            Product Management
+          </h1>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition"
+            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition font-medium touch-manipulation"
           >
             <Plus size={20} /> Add Product
           </button>
@@ -175,20 +177,20 @@ export default function AdminPage() {
 
         {/* Add/Edit Form */}
         {showForm && (
-          <div className="bg-slate-800 rounded-lg p-6 mb-8 border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-6">
+          <div className="bg-slate-800 rounded-lg p-4 sm:p-6 mb-8 border border-slate-700 shadow-lg">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
               {editingId ? "Edit Product" : "Add New Product"}
             </h2>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
             >
               <div className="col-span-1">
                 <input
                   type="text"
                   placeholder="Product Name *"
                   {...register("name")}
-                  className={`w-full bg-slate-700 text-white px-4 py-2 rounded border transition ${
+                  className={`w-full bg-slate-700 text-white px-4 py-2 sm:py-3 rounded border transition text-base sm:text-sm ${
                     errors.name
                       ? "border-red-500 focus:border-red-500"
                       : "border-slate-600 focus:border-blue-500"
@@ -206,7 +208,7 @@ export default function AdminPage() {
                   placeholder="Price *"
                   step="0.01"
                   {...register("price")}
-                  className={`w-full bg-slate-700 text-white px-4 py-2 rounded border transition ${
+                  className={`w-full bg-slate-700 text-white px-4 py-2 sm:py-3 rounded border transition text-base sm:text-sm ${
                     errors.price
                       ? "border-red-500 focus:border-red-500"
                       : "border-slate-600 focus:border-blue-500"
@@ -223,7 +225,7 @@ export default function AdminPage() {
                   type="text"
                   placeholder="Category *"
                   {...register("category")}
-                  className={`w-full bg-slate-700 text-white px-4 py-2 rounded border transition ${
+                  className={`w-full bg-slate-700 text-white px-4 py-2 sm:py-3 rounded border transition text-base sm:text-sm ${
                     errors.category
                       ? "border-red-500 focus:border-red-500"
                       : "border-slate-600 focus:border-blue-500"
@@ -240,7 +242,7 @@ export default function AdminPage() {
                   type="text"
                   placeholder="Image URL"
                   {...register("imageUrl")}
-                  className={`w-full bg-slate-700 text-white px-4 py-2 rounded border transition ${
+                  className={`w-full bg-slate-700 text-white px-4 py-2 sm:py-3 rounded border transition text-base sm:text-sm ${
                     errors.imageUrl
                       ? "border-red-500 focus:border-red-500"
                       : "border-slate-600 focus:border-blue-500"
@@ -252,11 +254,11 @@ export default function AdminPage() {
                   </p>
                 )}
               </div>
-              <div className="col-span-1 md:col-span-2">
+              <div className="col-span-1 sm:col-span-2">
                 <textarea
                   placeholder="Description"
                   {...register("description")}
-                  className={`w-full bg-slate-700 text-white px-4 py-2 rounded border transition h-24 resize-none ${
+                  className={`w-full bg-slate-700 text-white px-4 py-2 sm:py-3 rounded border transition h-24 resize-none text-base sm:text-sm ${
                     errors.description
                       ? "border-red-500 focus:border-red-500"
                       : "border-slate-600 focus:border-blue-500"
@@ -268,11 +270,11 @@ export default function AdminPage() {
                   </p>
                 )}
               </div>
-              <div className="col-span-1 md:col-span-2 flex gap-3">
+              <div className="col-span-1 sm:col-span-2 flex flex-col sm:flex-row gap-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white px-6 py-2 rounded transition flex-1"
+                  className="bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white px-6 py-2 sm:py-3 rounded transition flex-1 font-medium text-base sm:text-sm touch-manipulation"
                 >
                   {isSubmitting
                     ? "Saving..."
@@ -284,7 +286,7 @@ export default function AdminPage() {
                   type="button"
                   onClick={handleCancel}
                   disabled={isSubmitting}
-                  className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed text-white px-6 py-2 rounded transition flex-1"
+                  className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-800 disabled:cursor-not-allowed text-white px-6 py-2 sm:py-3 rounded transition flex-1 font-medium text-base sm:text-sm touch-manipulation"
                 >
                   Cancel
                 </button>
@@ -300,78 +302,140 @@ export default function AdminPage() {
               No products found. Add your first product to get started!
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-900 border-b border-slate-700">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-white font-semibold">
-                      Name
-                    </th>
-                    <th className="px-6 py-4 text-left text-white font-semibold">
-                      Category
-                    </th>
-                    <th className="px-6 py-4 text-left text-white font-semibold">
-                      Price
-                    </th>
-                    <th className="px-6 py-4 text-left text-white font-semibold">
-                      Description
-                    </th>
-                    <th className="px-6 py-4 text-left text-white font-semibold">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product, index) => (
-                    <tr
-                      key={product.id}
-                      className={`border-b border-slate-700 hover:bg-slate-700 transition ${
-                        index % 2 === 0 ? "bg-slate-800" : "bg-slate-750"
-                      }`}
-                    >
-                      <td className="px-6 py-4 text-white font-medium">
-                        {product.name}
-                      </td>
-                      <td className="px-6 py-4 text-gray-300">
-                        {product.category}
-                      </td>
-                      <td className="px-6 py-4 text-white font-semibold">
-                        ${product.price.toFixed(2)}
-                      </td>
-                      <td className="px-6 py-4 text-gray-400 text-sm truncate max-w-xs">
-                        {product.description || "N/A"}
-                      </td>
-                      <td className="px-6 py-4 flex gap-3">
-                        <button
-                          onClick={() => handleEdit(product)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded flex items-center gap-2 transition text-sm"
-                        >
-                          <Edit2 size={16} /> Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(product.id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded flex items-center gap-2 transition text-sm"
-                        >
-                          <Trash2 size={16} /> Delete
-                        </button>
-                      </td>
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-slate-900 border-b border-slate-700">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-white font-semibold">
+                        Name
+                      </th>
+                      <th className="px-6 py-4 text-left text-white font-semibold">
+                        Category
+                      </th>
+                      <th className="px-6 py-4 text-left text-white font-semibold">
+                        Price
+                      </th>
+                      <th className="px-6 py-4 text-left text-white font-semibold">
+                        Description
+                      </th>
+                      <th className="px-6 py-4 text-left text-white font-semibold">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {products.map((product, index) => (
+                      <tr
+                        key={product.id}
+                        className={`border-b border-slate-700 hover:bg-slate-700 transition ${
+                          index % 2 === 0 ? "bg-slate-800" : "bg-slate-750"
+                        }`}
+                      >
+                        <td className="px-6 py-4 text-white font-medium">
+                          {product.name}
+                        </td>
+                        <td className="px-6 py-4 text-gray-300">
+                          {product.category}
+                        </td>
+                        <td className="px-6 py-4 text-white font-semibold">
+                          ${product.price.toFixed(2)}
+                        </td>
+                        <td className="px-6 py-4 text-gray-400 text-sm truncate max-w-xs">
+                          {product.description || "N/A"}
+                        </td>
+                        <td className="px-6 py-4 flex gap-3">
+                          <button
+                            onClick={() => handleEdit(product)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded flex items-center gap-2 transition text-sm"
+                          >
+                            <Edit2 size={16} /> Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(product.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded flex items-center gap-2 transition text-sm"
+                          >
+                            <Trash2 size={16} /> Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-4 p-4">
+                {products.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-slate-700 p-4 rounded-lg border border-slate-600 space-y-3"
+                  >
+                    <div>
+                      <p className="text-gray-400 text-xs font-semibold">
+                        NAME
+                      </p>
+                      <p className="text-white font-medium">{product.name}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-gray-400 text-xs font-semibold">
+                          CATEGORY
+                        </p>
+                        <p className="text-gray-300">{product.category}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-xs font-semibold">
+                          PRICE
+                        </p>
+                        <p className="text-white font-semibold">
+                          ${product.price.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                    {product.description && (
+                      <div>
+                        <p className="text-gray-400 text-xs font-semibold">
+                          DESCRIPTION
+                        </p>
+                        <p className="text-gray-400 text-sm">
+                          {product.description}
+                        </p>
+                      </div>
+                    )}
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        onClick={() => handleEdit(product)}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 sm:py-3 rounded flex items-center justify-center gap-2 transition text-sm font-medium touch-manipulation"
+                      >
+                        <Edit2 size={16} /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        className="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 sm:py-3 rounded flex items-center justify-center gap-2 transition text-sm font-medium touch-manipulation"
+                      >
+                        <Trash2 size={16} /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
 
         {/* Summary */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="bg-slate-800 p-4 sm:p-6 rounded-lg border border-slate-700">
             <p className="text-gray-400 text-sm">Total Products</p>
-            <p className="text-3xl font-bold text-white">{products.length}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
+              {products.length}
+            </p>
           </div>
-          <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+          <div className="bg-slate-800 p-4 sm:p-6 rounded-lg border border-slate-700">
             <p className="text-gray-400 text-sm">Average Price</p>
-            <p className="text-3xl font-bold text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
               $
               {(
                 products.reduce((sum, p) => sum + p.price, 0) /
@@ -379,9 +443,9 @@ export default function AdminPage() {
               ).toFixed(2)}
             </p>
           </div>
-          <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+          <div className="bg-slate-800 p-4 sm:p-6 rounded-lg border border-slate-700">
             <p className="text-gray-400 text-sm">Total Value</p>
-            <p className="text-3xl font-bold text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
               ${products.reduce((sum, p) => sum + p.price, 0).toFixed(2)}
             </p>
           </div>
