@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
+import { toast } from "sonner";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -21,11 +22,13 @@ const Contact = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const contactInfo = [
     {
@@ -89,49 +92,6 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      {/* <nav className="bg-slate-950 bg-opacity-80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-2xl font-bold text-white hover:text-blue-400 transition"
-          >
-            NextCart
-          </Link>
-          <div className="hidden md:flex gap-8">
-            <Link
-              href="/"
-              className="text-slate-300 hover:text-white transition"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className="text-slate-300 hover:text-white transition"
-            >
-              About
-            </Link>
-            <Link href="/contact" className="text-blue-400 font-semibold">
-              Contact
-            </Link>
-          </div>
-          <div className="flex gap-4">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-slate-300 hover:text-white transition"
-            >
-              Login
-            </Link>
-            <Link
-              href="/signup"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium"
-            >
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </nav> */}
-
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 md:py-20 lg:py-32">
         <div className="text-center space-y-3 sm:space-y-4 md:space-y-6">
@@ -191,10 +151,18 @@ const Contact = () => {
 
             <form
               onSubmit={handleSubmit(async (data) => {
-                console.log("Form submitted:", data);
-                setSubmitted(true);
+                setIsLoading(true);
                 // Send email logic can be added here
-                axios.post("/api/contact", data);
+                const res = await axios.post("/api/contact", data);
+                if (res.status === 200) {
+                  reset();
+                  setSubmitted(true);
+
+                  setIsLoading(false);
+                  return;
+                }
+                setIsLoading(false);
+                toast.error("Something went wrong. Please try again.");
               })}
               className="space-y-4 sm:space-y-6"
             >
@@ -269,14 +237,15 @@ const Contact = () => {
 
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full px-4 sm:px-6 py-2 sm:py-3 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition transform hover:scale-105"
               >
                 <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                Send Message
+                {isLoading ? "Sending..." : "Send Message"}
               </button>
 
               {submitted && (
-                <div className="p-3 sm:p-4 bg-green-500 bg-opacity-20 border border-green-500 rounded-lg text-green-400 text-xs sm:text-sm">
+                <div className="p-3 sm:p-4 bg-green-500 bg-opacity-20 border border-green-500 rounded-lg text-white text-xs sm:text-sm">
                   ✓ Thank you! We've received your message and will get back to
                   you soon.
                 </div>
