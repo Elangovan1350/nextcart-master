@@ -31,7 +31,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black`}
       >
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-right" duration={1500} richColors />
 
         {/* Navigation */}
         <Navbar />
