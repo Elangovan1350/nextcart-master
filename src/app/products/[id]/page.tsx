@@ -126,60 +126,66 @@ export default function ProductPage({
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex items-center gap-2 text-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm overflow-x-auto">
           <Link
             href="/"
-            className="text-slate-400 hover:text-blue-400 transition flex items-center gap-1"
+            className="text-slate-400 hover:text-blue-400 transition flex items-center gap-1 whitespace-nowrap"
           >
-            <ArrowLeft className="w-4 h-4" /> Home
+            <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" /> Home
           </Link>
           <span className="text-slate-600">/</span>
           <Link
             href="/products"
-            className="text-slate-400 hover:text-blue-400 transition"
+            className="text-slate-400 hover:text-blue-400 transition whitespace-nowrap"
           >
             Products
           </Link>
           <span className="text-slate-600">/</span>
-          <span className="text-blue-400 font-semibold">{product.name}</span>
+          <span className="text-blue-400 font-semibold truncate">
+            {product.name}
+          </span>
         </div>
       </div>
 
       {/* Product Section */}
       {loading ? (
         <div className="h-36 flex items-center justify-center bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-          <p className="text-xl text-slate-400">Loading product...</p>
+          <p className="text-base sm:text-lg text-slate-400">
+            Loading product...
+          </p>
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
             {/* Product Image */}
-            <div className="flex items-center justify-center bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl p-12 hover:border-blue-500 transition">
-              <div className="text-9xl animate-bounce">{product.imageUrl}</div>
+            <div className="flex items-center justify-center pt-10 sm:pt-12 md:pt-14 lg:pt-16 bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl  hover:border-blue-500 transition">
+              <div className="text-6xl sm:text-8xl lg:text-9xl animate-bounce">
+                {product.imageUrl}
+              </div>
             </div>
 
             {/* Product Details */}
-            <div className="space-y-8">
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8">
               {/* Category Badge */}
               <div className="flex items-center gap-2">
-                <span className="bg-linear-to-r from-blue-600 to-cyan-600 px-4 py-2 rounded-full text-sm font-semibold text-white">
+                <span className="bg-linear-to-r from-blue-600 to-cyan-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-white">
                   {product.category}
                 </span>
               </div>
               {/* Product Name */}
-              <div className="space-y-4">
-                <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+              <div className="space-y-2 sm:space-y-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">
                   {product.name}
                 </h1>
 
                 {/* Rating */}
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-5 h-5 ${
+                        className={`w-4 h-4 sm:w-5 sm:h-5 ${
                           i < Math.floor(product.rating)
                             ? "fill-yellow-400 text-yellow-400"
                             : "text-slate-600"
@@ -187,27 +193,29 @@ export default function ProductPage({
                       />
                     ))}
                   </div>
-                  <span className="text-lg font-bold text-white">
+                  <span className="text-base sm:text-lg font-bold text-white">
                     {product.rating}
                   </span>
-                  <span className="text-slate-400">
+                  <span className="text-xs sm:text-sm text-slate-400">
                     ({product.reviews} reviews)
                   </span>
                 </div>
               </div>
               {/* Price */}
-              <div className="space-y-2 border-t border-b border-slate-700 py-6">
-                <div className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-400">
+              <div className="space-y-2 border-t border-b border-slate-700 py-4 sm:py-6">
+                <div className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-400">
                   ${product.price.toFixed(2)}
                 </div>
-                <p className="text-slate-400">Inclusive of all taxes</p>
+                <p className="text-xs sm:text-sm text-slate-400">
+                  Inclusive of all taxes
+                </p>
               </div>
               {/* Description */}
-              <div className="space-y-3">
-                <h2 className="text-base font-semibold text-white">
+              <div className="space-y-2 sm:space-y-3">
+                <h2 className="text-sm sm:text-base font-semibold text-white">
                   About this product
                 </h2>
-                <p className="text-slate-300 leading-relaxed text-sm">
+                <p className="text-slate-300 leading-relaxed text-xs sm:text-sm">
                   {product.description}
                 </p>
               </div>
@@ -227,20 +235,21 @@ export default function ProductPage({
                 />
               </div> */}
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-2 sm:pt-4">
                 <button
                   onClick={handleAddToCart}
                   disabled={cartLoading}
-                  className={`flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 ${
+                  className={`flex-1 py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition transform hover:scale-105 ${
                     addedToCart
                       ? "bg-green-600 hover:bg-green-700 text-white"
                       : "bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
                   }`}
                 >
-                  <ShoppingCart className="w-5 h-5" />
+                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                   {cartLoading ? (
                     <span className="flex items-center gap-2">
-                      <Loader className="w-5 h-5 animate-spin" /> Adding...
+                      <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />{" "}
+                      Adding...
                     </span>
                   ) : addedToCart ? (
                     "✓ Added to Cart"
@@ -250,36 +259,36 @@ export default function ProductPage({
                 </button>
                 <button
                   onClick={() => setWishlist(!wishlist)}
-                  className={`py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 ${
+                  className={`py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition transform hover:scale-105 ${
                     wishlist
                       ? "bg-red-600 hover:bg-red-700 text-white"
                       : "border-2 border-slate-600 hover:border-blue-500 text-white hover:text-blue-400"
                   }`}
                 >
                   <Heart
-                    className={`w-5 h-5 ${wishlist ? "fill-current" : ""}`}
+                    className={`w-4 h-4 sm:w-5 sm:h-5 ${wishlist ? "fill-current" : ""}`}
                   />
                 </button>
               </div>
               {/* Product Info */}
-              <div className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-xl p-6 space-y-3">
-                <div className="flex justify-between">
+              <div className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-xl p-4 sm:p-6 space-y-2 sm:space-y-3">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-slate-400">Product ID:</span>
                   <span className="text-white font-semibold">{product.id}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-slate-400">Category:</span>
                   <span className="text-white font-semibold">
                     {product.category}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-slate-400">Stock Status:</span>
                   <span className="text-green-400 font-semibold">In Stock</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-slate-400">Last Updated:</span>
-                  <span className="text-slate-400 text-sm">
+                  <span className="text-slate-400">
                     {new Date(product.updatedAt).toLocaleDateString()}
                   </span>
                 </div>

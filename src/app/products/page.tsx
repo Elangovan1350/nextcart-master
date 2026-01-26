@@ -73,16 +73,16 @@ const Products = () => {
   return (
     <div className="min-h-screen  bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="space-y-4">
-          <h1 className="text-5xl md:text-6xl font-bold text-white">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div className="space-y-2 sm:space-y-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
             Explore Our
             <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-400">
               {" "}
               Products
             </span>
           </h1>
-          <p className="text-xl text-slate-400 max-w-2xl">
+          <p className="text-sm sm:text-base md:text-lg text-slate-400 max-w-2xl">
             Discover {allProducts.length} amazing products across{" "}
             {categories.length - 1} categories. Find exactly what you're looking
             for.
@@ -91,42 +91,47 @@ const Products = () => {
       </section>
 
       {/* Search and Filter Bar */}
-      <section className="max-w-7xl mx-auto sticky top-0 z-30 px-4 sm:px-6 lg:px-8  py-6   bg-linear-to-b from-slate-900 via-slate-800 to-transparent ">
-        <div className=" flex flex-col gap-2">
+      <section className="max-w-7xl mx-auto sticky top-0 z-30 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 bg-linear-to-b from-slate-900 via-slate-800 to-transparent">
+        <div className="flex flex-col gap-3 sm:gap-4">
           {/* Search */}
           <input
             type="text"
             placeholder="Search products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition"
+            className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-slate-800 border border-slate-700 rounded-lg text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition"
           />
 
           {/* Sort and Filter Controls */}
-          <div className="flex gap-2 sm:gap-4 justify-between items-center flex-nowrap">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-between items-stretch sm:items-center">
             <div className="flex gap-2 items-center">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white hover:border-blue-500 transition flex items-center gap-2"
+                className="px-3 sm:px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs sm:text-sm text-white hover:border-blue-500 transition flex items-center gap-2 whitespace-nowrap"
               >
-                <Filter className="w-4 h-4" />
-                {showFilters ? "Hide" : "Show"} Filters
+                <Filter className="w-4 h-4 shrink-0" />
+                <span className="hidden sm:inline">
+                  {showFilters ? "Hide" : "Show"} Filters
+                </span>
+                <span className="sm:hidden">
+                  {showFilters ? "Hide" : "Show"}
+                </span>
               </button>
             </div>
 
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500 transition"
+              className="px-3 sm:px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500 transition"
             >
               <option value="featured">Featured</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
+              <option value="price-low">Low to High</option>
+              <option value="price-high">High to Low</option>
               <option value="rating">Highest Rated</option>
               <option value="reviews">Most Reviews</option>
             </select>
 
-            <div className="text-slate-300 text-sm hidden md:block">
+            <div className="text-slate-300 text-xs sm:text-sm">
               {filteredProducts.length} products
             </div>
           </div>
@@ -134,12 +139,12 @@ const Products = () => {
           {/* Category Filter */}
 
           {showFilters && (
-            <div className="grid md:grid-cols-5 lg:grid-cols-7 grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-2 sm:gap-3">
               {categories.map((category) => (
                 <div
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg font-medium transition  shrink-0 flex justify-center items-center ${
+                  className={`px-2 sm:px-3 py-2 rounded-lg font-medium text-xs sm:text-sm transition shrink-0 flex justify-center items-center text-center ${
                     selectedCategory === category
                       ? "bg-blue-600 text-white"
                       : "bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500"
@@ -156,19 +161,21 @@ const Products = () => {
       {/* Products Grid */}
       {Loading ? (
         <div className="h-36 flex items-center justify-center bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-          <p className="text-xl text-slate-400">Loading products...</p>
+          <p className="text-base sm:text-lg text-slate-400">
+            Loading products...
+          </p>
         </div>
       ) : (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {filteredProducts.length > 0 ? (
-            <div className="grid md:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {filteredProducts.map((product) => (
                 <div
                   onClick={() => {
                     router.push(`/products/${product.id}`);
                   }}
                   key={product.id}
-                  className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition transform hover:scale-105 group"
+                  className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition transform hover:scale-105 group cursor-pointer"
                 >
                   {/* Product Image */}
                   <div className="bg-linear-to-br from-slate-700 to-slate-800 h-40 flex items-center justify-center text-6xl group-hover:scale-110 transition">
@@ -176,10 +183,10 @@ const Products = () => {
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-4">
+                  <div className="p-3 sm:p-4">
                     <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <h3 className="text-sm font-bold text-white line-clamp-2">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-xs sm:text-sm font-bold text-white line-clamp-2">
                           {product.name}
                         </h3>
                         <p className="text-xs text-blue-400 mt-1">
@@ -189,15 +196,18 @@ const Products = () => {
                     </div>
 
                     {/* Description */}
-                    <p className="text-xs text-slate-400 line-clamp-2 mb-3">
+                    <p className="text-xs text-slate-400 line-clamp-2 mb-2 sm:mb-3">
                       {product.description}
                     </p>
 
                     {/* Rating */}
-                    <div className="flex items-center gap-1 mb-3">
+                    <div className="flex items-center gap-1 mb-2 sm:mb-3">
                       <div className="flex text-yellow-400">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-3 h-3 fill-current" />
+                          <Star
+                            key={i}
+                            className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current"
+                          />
                         ))}
                       </div>
                       <span className="text-xs text-slate-400">
@@ -206,11 +216,11 @@ const Products = () => {
                     </div>
 
                     {/* Price and Button */}
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-blue-400">
-                        {product.price}
+                    <div className="flex justify-between items-center gap-2">
+                      <span className="text-base sm:text-lg font-bold text-blue-400">
+                        ${product.price}
                       </span>
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition">
+                      <button className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition shrink-0">
                         <ShoppingCart className="w-4 h-4" />
                       </button>
                     </div>
@@ -219,19 +229,21 @@ const Products = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20">
-              <p className="text-2xl text-slate-400 mb-4">No products found</p>
+            <div className="text-center py-12 sm:py-20">
+              <p className="text-lg sm:text-2xl text-slate-400 mb-4">
+                No products found
+              </p>
             </div>
           )}
         </section>
       )}
-      <div className="flex justify-center items-center pb-12">
+      <div className="flex justify-center items-center pb-8 sm:pb-12 px-4">
         <button
           onClick={() => {
             setSearchTerm("");
             setSelectedCategory("All");
           }}
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition"
+          className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition text-sm sm:text-base"
         >
           Clear Filters
         </button>

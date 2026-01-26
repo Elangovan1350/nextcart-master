@@ -19,15 +19,17 @@ const ProfilePage = () => {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
-        <div className="text-center space-y-6">
-          <h1 className="text-4xl font-bold text-white">Please Sign In</h1>
-          <p className="text-xl text-slate-400">
+      <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 py-8">
+        <div className="text-center space-y-4 sm:space-y-6 w-full max-w-md">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white">
+            Please Sign In
+          </h1>
+          <p className="text-base sm:text-lg text-slate-400">
             You need to be logged in to view your profile
           </p>
           <button
             onClick={() => router.push("/login")}
-            className="px-8 py-4 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition transform hover:scale-105"
+            className="w-full px-6 sm:px-8 py-3 sm:py-4 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition transform hover:scale-105"
           >
             Go to Login
           </button>
@@ -41,60 +43,62 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
         {/* Profile Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-4">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-2 sm:mb-4">
             My
             <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-400">
               {" "}
               Profile
             </span>
           </h1>
-          <p className="text-xl text-slate-400">
+          <p className="text-sm sm:text-base md:text-lg text-slate-400">
             View and manage your account information
           </p>
         </div>
 
         {/* Profile Card */}
-        <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
           {/* Main Profile Info */}
           <div className="lg:col-span-2">
-            <div className="bg-slate-800 rounded-2xl border border-slate-700 p-2 sm:p-8 hover:border-slate-600 transition">
-              <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                <User className="w-6 h-6 text-blue-400" />
-                Account Information
+            <div className="bg-slate-800 rounded-2xl border border-slate-700 p-4 sm:p-6 lg:p-8 hover:border-slate-600 transition">
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3">
+                <User className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 shrink-0" />
+                <span className="truncate">Account Information</span>
               </h2>
 
-              <div className="space-y-8">
+              <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                 {/* Name Field */}
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-3">
+                  <label className="text-slate-300 font-semibold block mb-2 sm:mb-3 text-sm sm:text-base">
                     Full Name
                   </label>
-                  <div className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 text-white">
+                  <div className="px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 rounded-lg border border-slate-600 text-white text-sm sm:text-base wrap-break">
                     {user.name || "Not provided"}
                   </div>
                 </div>
 
                 {/* Email Field */}
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-3">
+                  <label className="text-slate-300 font-semibold block mb-2 sm:mb-3 text-sm sm:text-base">
                     Email Address
                   </label>
-                  <div className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 text-white flex items-center gap-2">
-                    <Mail className="w-5 h-5 text-blue-400" />
-                    {user.email || "Not provided"}
+                  <div className="px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 rounded-lg border border-slate-600 text-white flex items-center gap-2 text-sm sm:text-base break-all">
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 shrink-0" />
+                    <span className="min-w-0">
+                      {user.email || "Not provided"}
+                    </span>
                   </div>
                 </div>
 
                 {/* Email Verification Status */}
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-3">
+                  <label className="text-slate-300 font-semibold block mb-2 sm:mb-3 text-sm sm:text-base">
                     Email Verification Status
                   </label>
                   <div
-                    className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 flex items-center gap-2"
+                    className="px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 rounded-lg border border-slate-600 flex items-center gap-2 cursor-pointer hover:border-slate-500 transition text-sm sm:text-base"
                     onClick={() =>
                       sendVerificationEmail(
                         {
@@ -112,7 +116,7 @@ const ProfilePage = () => {
                       )
                     }
                   >
-                    <Shield className="w-5 h-5" />
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                     <span
                       className={
                         user.emailVerified
@@ -128,14 +132,14 @@ const ProfilePage = () => {
                 {/* Profile Image */}
                 {user.image && (
                   <div>
-                    <label className="text-slate-300 font-semibold block mb-3">
+                    <label className="text-slate-300 font-semibold block mb-2 sm:mb-3 text-sm sm:text-base">
                       Profile Picture
                     </label>
-                    <div className="rounded-lg border border-slate-600 overflow-hidden bg-slate-700 p-4 flex justify-center">
+                    <div className="rounded-lg border border-slate-600 overflow-hidden bg-slate-700 p-3 sm:p-4 flex justify-center">
                       <img
                         src={user.image}
                         alt={user.name || "Profile"}
-                        className="w-40 h-40 rounded-lg object-cover"
+                        className="w-32 h-32 sm:w-40 sm:h-40 rounded-lg object-cover"
                       />
                     </div>
                   </div>
@@ -145,39 +149,41 @@ const ProfilePage = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-3 sm:space-y-4 lg:space-y-6">
             {/* Change Password Button */}
             {session.user.role === "admin" && (
               <button
                 onClick={() => router.push("/admin")}
-                className="w-full px-6 py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
               >
-                <Shield className="w-5 h-5" />
-                Admin Dashboard
+                <Shield className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                <span>Admin Dashboard</span>
               </button>
             )}
             <button
               onClick={() => router.push("/change-password")}
-              className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105"
+              className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
             >
-              <Lock className="w-5 h-5" />
-              Change Password
+              <Lock className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <span>Change Password</span>
             </button>
 
             {/* Sign Out Button */}
             <button
               onClick={handleSignOut}
               disabled={isLoading}
-              className="w-full px-6 py-4 bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105"
+              className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
             >
-              <LogOut className="w-5 h-5" />
-              {isLoading ? "Signing Out..." : "Sign Out"}
+              <LogOut className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <span>{isLoading ? "Signing Out..." : "Sign Out"}</span>
             </button>
 
             {/* Quick Links */}
-            <div className="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-              <h3 className="text-lg font-bold text-white mb-4">Quick Links</h3>
-              <ul className="space-y-3">
+            <div className="bg-slate-800 rounded-2xl border border-slate-700 p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4">
+                Quick Links
+              </h3>
+              <ul className="space-y-2 sm:space-y-3">
                 <li>
                   <button
                     onClick={() => router.push("/products")}

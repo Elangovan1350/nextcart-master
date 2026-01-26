@@ -23,61 +23,61 @@ const navbar = () => {
   }, [session.data, setCartCount]);
   return (
     <nav className="bg-slate-950 bg-opacity-80 backdrop-blur-md border-b border-slate-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
         <Link
           href="/"
-          className="flex items-center gap-2 text-2xl font-bold text-white"
+          className="flex items-center gap-1.5 sm:gap-2 text-lg sm:text-2xl font-bold text-white"
         >
-          <ShoppingCart className="w-8 h-8 text-blue-500" />
-          NextCart
+          <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500" />
+          <span className="hidden xs:inline">NextCart</span>
         </Link>
-        <div className="hidden sm:flex gap-8">
+        <div className="hidden sm:flex gap-4 sm:gap-6 lg:gap-8">
           <Link
             href="/products"
-            className="text-slate-300 hover:text-white transition"
+            className="text-xs sm:text-sm text-slate-300 hover:text-white transition"
           >
             Products
           </Link>
           <Link
             href="/about"
-            className="text-slate-300 hover:text-white transition"
+            className="text-xs sm:text-sm text-slate-300 hover:text-white transition"
           >
             About
           </Link>
           <Link
             href="/contact"
-            className="text-slate-300 hover:text-white transition"
+            className="text-xs sm:text-sm text-slate-300 hover:text-white transition"
           >
             Contact
           </Link>
         </div>
         <div className="sm:hidden">
           <button
-            className="text-slate-300 hover:text-white transition"
+            className="text-slate-300 hover:text-white transition p-1"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
             ) : (
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             )}
           </button>
         </div>
-        <div className="hidden sm:flex  gap-6 ">
+        <div className="hidden sm:flex gap-3 sm:gap-4 lg:gap-6">
           {session.data?.user ? (
             <>
               <Link
                 href="/profile"
-                className=" text-slate-300 hover:text-white transition"
+                className="text-xs sm:text-sm text-slate-300 hover:text-white transition"
               >
                 {session.data.user.name}
               </Link>
               <Link
                 href="/cart"
-                className=" text-slate-300 hover:text-white transition relative"
+                className="text-xs sm:text-sm text-slate-300 hover:text-white transition relative"
               >
                 Cart
-                <span className="bg-blue-500 text-white rounded-full px-2 py-1 ml-2 absolute -top-3 -right-6 text-xs">
+                <span className="bg-blue-500 text-white rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 ml-1 sm:ml-2 absolute -top-2 sm:-top-3 -right-4 sm:-right-6 text-xs">
                   {cartCount}
                 </span>
               </Link>
@@ -86,13 +86,13 @@ const navbar = () => {
             <>
               <Link
                 href="/login"
-                className="px-4 py-2 text-slate-300 hover:text-white transition"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-slate-300 hover:text-white transition"
               >
                 Login
               </Link>
               <Link
                 href="/signup"
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium"
               >
                 Sign Up
               </Link>
@@ -101,27 +101,27 @@ const navbar = () => {
         </div>
       </div>
       {isMenuOpen && (
-        <div className="sm:hidden flex flex-col  py-3 items-center justify-center bg-slate-900 border-t border-slate-700">
+        <div className="sm:hidden flex flex-col py-2 sm:py-3 items-center justify-center bg-slate-900 border-t border-slate-700">
           {session.data?.user ? (
             <>
-              <div className="w-full flex justify-center  hover:ring-1 ring-inset ring-slate-700 py-2">
+              <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
                 <Link
                   href="/profile"
-                  className="block  text-slate-300 hover:text-white transition"
+                  className="block text-sm sm:text-base text-slate-300 hover:text-white transition"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {session.data.user.name}
                 </Link>
               </div>
 
-              <div className="w-full flex justify-center  hover:ring-1 ring-inset ring-slate-700 py-2">
+              <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
                 <Link
                   href="/cart"
-                  className="block  text-slate-300 hover:text-white transition relative"
+                  className="block text-sm sm:text-base text-slate-300 hover:text-white transition relative"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Cart
-                  <span className="bg-blue-500 text-white rounded-full px-2 py-1 ml-2 absolute -top-3 -right-6 text-xs">
+                  <span className="bg-blue-500 text-white rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 ml-1 sm:ml-2 absolute -top-2 sm:-top-3 -right-4 sm:-right-6 text-xs">
                     {cartCount}
                   </span>
                 </Link>
@@ -129,19 +129,19 @@ const navbar = () => {
             </>
           ) : (
             <>
-              <div className="w-full flex justify-center  hover:ring-1 ring-inset ring-slate-700 py-2">
+              <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
                 <Link
                   href="/login"
-                  className="block  text-slate-300 hover:text-white transition"
+                  className="block text-sm sm:text-base text-slate-300 hover:text-white transition"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
               </div>
-              <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2">
+              <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
                 <Link
                   href="/signup"
-                  className="block  text-slate-300 hover:text-white transition"
+                  className="block text-sm sm:text-base text-slate-300 hover:text-white transition"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Sign Up
@@ -149,28 +149,28 @@ const navbar = () => {
               </div>
             </>
           )}
-          <div className="w-full flex justify-center  hover:ring-1 ring-inset ring-slate-700 py-2">
+          <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
             <Link
               href="/products"
-              className="block  text-slate-300 hover:text-white transition"
+              className="block text-sm sm:text-base text-slate-300 hover:text-white transition"
               onClick={() => setIsMenuOpen(false)}
             >
               Products
             </Link>
           </div>
-          <div className="w-full flex justify-center  hover:ring-1 ring-inset ring-slate-700 py-2">
+          <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
             <Link
               href="/about"
-              className="block  text-slate-300 hover:text-white transition"
+              className="block text-sm sm:text-base text-slate-300 hover:text-white transition"
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
           </div>
-          <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700  py-2">
+          <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
             <Link
               href="/contact"
-              className="block  text-slate-300 hover:text-white transition"
+              className="block text-sm sm:text-base text-slate-300 hover:text-white transition"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
@@ -178,14 +178,14 @@ const navbar = () => {
           </div>
           {session.data?.user && (
             <div
-              className="w-full group flex justify-center hover:ring-1 ring-inset ring-slate-700  py-2"
+              className="w-full group flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3"
               onClick={async () => {
                 await signOut();
                 router.push("/");
                 setIsMenuOpen(false);
               }}
             >
-              <button className="block group-hover:text-red-500 text-red-300  transition">
+              <button className="block group-hover:text-red-500 text-red-300 text-sm sm:text-base transition">
                 Sign Out
               </button>
             </div>
