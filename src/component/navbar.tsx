@@ -51,7 +51,26 @@ const navbar = () => {
             Contact
           </Link>
         </div>
-        <div className="sm:hidden">
+        <div className="sm:hidden flex gap-10 justify-center items-center">
+          {session.data?.user ? (
+            <Link
+              href="/cart"
+              className="text-sm text-slate-300 hover:text-white transition relative"
+            >
+              Cart
+              <span className="bg-blue-500 text-white rounded-full px-2 py-1 ml-2 absolute -top-3 -right-6 text-xs">
+                {cartCount}
+              </span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="text-base sm:text-sm text-slate-300 hover:text-white transition"
+            >
+              Login
+            </Link>
+          )}
+
           <button
             className="text-slate-300 hover:text-white transition p-1"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -114,7 +133,7 @@ const navbar = () => {
                 </Link>
               </div>
 
-              <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
+              {/* <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
                 <Link
                   href="/cart"
                   className="block text-sm sm:text-base text-slate-300 hover:text-white transition relative"
@@ -125,7 +144,7 @@ const navbar = () => {
                     {cartCount}
                   </span>
                 </Link>
-              </div>
+              </div> */}
             </>
           ) : (
             <>
