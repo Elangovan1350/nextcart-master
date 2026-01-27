@@ -5,7 +5,6 @@ import "./globals.css";
 import Navbar from "@/component/navbar";
 import Footer from "@/component/footer";
 import { Toaster } from "sonner";
-import { ShoppingCart } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

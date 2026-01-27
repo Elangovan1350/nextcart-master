@@ -2,11 +2,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { requestPasswordReset } from "@/lib/auth-client";
+import { requestPasswordReset, useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const forgotPasswordSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -14,6 +15,8 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPasswordPage = () => {
+  const router = useRouter();
+  const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const {
@@ -23,6 +26,12 @@ const ForgotPasswordPage = () => {
   } = useForm<ForgotPasswordData>({
     resolver: zodResolver(forgotPasswordSchema),
   });
+
+  useEffect(() => {
+    if (session.data?.user) {
+      router.push("/");
+    }
+  }, [session.data, router]);
 
   const onSubmit = async (data: ForgotPasswordData) => {
     setIsLoading(true);

@@ -2,9 +2,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -15,6 +15,7 @@ const loginSchema = z.object({
 });
 type LoginData = z.infer<typeof loginSchema>;
 const login = () => {
+  const session = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -24,6 +25,11 @@ const login = () => {
   } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
   });
+  useEffect(() => {
+    if (session.data?.user) {
+      router.push("/");
+    }
+  }, [session.data, router]);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">

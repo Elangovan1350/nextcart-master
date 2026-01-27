@@ -2,9 +2,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, signUp } from "@/lib/auth-client";
+import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -17,6 +17,7 @@ const signUpSchema = z.object({
 type SignUpData = z.infer<typeof signUpSchema>;
 
 export default function SignUpPage() {
+  const session = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -26,6 +27,11 @@ export default function SignUpPage() {
   } = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
   });
+  useEffect(() => {
+    if (session.data?.user) {
+      router.push("/");
+    }
+  }, [session.data, router]);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col justify-center items-center px-4 py-6 sm:py-8 pb-8 sm:pb-10">
