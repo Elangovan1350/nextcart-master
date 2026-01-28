@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { betterAuth } from "better-auth";
-import { admin } from "better-auth/plugins";
+import { admin, oneTap } from "better-auth/plugins";
 
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
@@ -18,6 +18,7 @@ export const auth = betterAuth({
       defaultRole: "user", // Explicitly set the default for new signups
       adminRole: "admin", // Define what the admin role is called
     }),
+    oneTap(),
   ],
   emailAndPassword: {
     enabled: true,

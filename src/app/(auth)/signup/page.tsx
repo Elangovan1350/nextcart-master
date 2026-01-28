@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, signUp, useSession } from "@/lib/auth-client";
+import { oneTap, signIn, signUp, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -27,6 +27,24 @@ export default function SignUpPage() {
   } = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
   });
+  useEffect(() => {
+    // Show the One Tap prompt when the component loads
+    oneTap({
+      fetchOptions: {
+        onSuccess: () => {
+          // Navigate or refresh after successful sign-in
+          router.push("/");
+        },
+        onError: (err) => {
+          console.error("One Tap error:", err);
+        },
+      },
+      onPromptNotification: (notification) => {
+        console.log("Prompt dismissed or skipped:", notification);
+        toast.error("Google One Tap sign-in was dismissed or skipped.");
+      },
+    });
+  }, []);
   useEffect(() => {
     if (session.data?.user) {
       router.push("/");
