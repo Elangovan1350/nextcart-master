@@ -23,7 +23,7 @@ export const {
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
       autoSelect: false, // optional
       cancelOnTapOutside: true,
-      context: "signup",
+      context: "signin",
     }),
   ],
 });
