@@ -30,6 +30,7 @@ export default function SignUpPage() {
   useEffect(() => {
     // Show the One Tap prompt when the component loads
     oneTap({
+      callbackURL: "/",
       fetchOptions: {
         onSuccess: () => {
           // Navigate or refresh after successful sign-in
