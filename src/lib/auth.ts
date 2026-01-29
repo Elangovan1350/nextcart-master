@@ -8,11 +8,13 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // app password
+    user: process.env.EMAIL_USER as string,
+    pass: process.env.EMAIL_PASS as string, // app password
   },
 });
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET as string,
   plugins: [
     admin({
       defaultRole: "user", // Explicitly set the default for new signups
@@ -24,7 +26,7 @@ export const auth = betterAuth({
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
       await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: process.env.EMAIL_USER as string,
         to: user.email,
         subject: "Reset your password",
         text: `Click the link to reset your password: ${url}`,
@@ -32,7 +34,7 @@ export const auth = betterAuth({
     },
     onPasswordReset: async ({ user }) => {
       await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: process.env.EMAIL_USER as string,
         to: user.email,
         subject: "Your password has been reset",
         text: `Your password has been successfully reset.`,
@@ -45,7 +47,7 @@ export const auth = betterAuth({
 
     sendVerificationEmail: async ({ user, url }) => {
       await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: process.env.EMAIL_USER as string,
         to: user.email,
         subject: "Verify your email address",
         text: `Click the link to verify your email: ${url}`,

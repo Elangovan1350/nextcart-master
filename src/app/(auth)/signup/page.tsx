@@ -27,24 +27,10 @@ export default function SignUpPage() {
   } = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
   });
+
   useEffect(() => {
     // Show the One Tap prompt when the component loads
-    oneTap({
-      callbackURL: "/",
-      fetchOptions: {
-        onSuccess: () => {
-          // Navigate or refresh after successful sign-in
-          router.push("/");
-        },
-        onError: (err) => {
-          console.error("One Tap error:", err);
-        },
-      },
-      onPromptNotification: (notification) => {
-        console.log("Prompt dismissed or skipped:", notification);
-        toast.error("Google One Tap sign-in was dismissed or skipped.");
-      },
-    });
+    oneTap();
   }, []);
   useEffect(() => {
     if (session.data?.user) {
