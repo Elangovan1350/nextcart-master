@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { oneTap, signIn, signUp, useSession } from "@/lib/auth-client";
+import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -28,10 +28,6 @@ export default function SignUpPage() {
     resolver: zodResolver(signUpSchema),
   });
 
-  useEffect(() => {
-    // Show the One Tap prompt when the component loads
-    oneTap();
-  }, []);
   useEffect(() => {
     if (session.data?.user) {
       router.push("/");
