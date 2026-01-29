@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { oneTap, signIn, useSession } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -26,19 +26,6 @@ const login = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  useEffect(() => {
-    // Show the One Tap prompt when the component loads
-    const oneTapInstance = async () =>
-      await oneTap({
-        fetchOptions: {
-          onSuccess: () => {
-            // For example, use a router to navigate without a full reload:
-            router.push("/");
-          },
-        },
-      });
-    oneTapInstance();
-  }, []);
   useEffect(() => {
     if (session.data?.user) {
       router.push("/");

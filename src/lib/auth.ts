@@ -20,7 +20,6 @@ export const auth = betterAuth({
       defaultRole: "user", // Explicitly set the default for new signups
       adminRole: "admin", // Define what the admin role is called
     }),
-    oneTap(),
   ],
   emailAndPassword: {
     enabled: true,
