@@ -112,39 +112,37 @@ const ProfilePage = () => {
                         {user.emailVerified ? "✓ Verified" : "⊘ Not Verified"}
                       </span>
                     </div>
-                    <button
-                      className={
-                        user.emailVerified
-                          ? "text-green-400 underline text-sm sm:text-base underline-offset-2"
-                          : "text-orange-400 underline text-sm sm:text-base underline-offset-2"
-                      }
-                      onClick={() => {
-                        setEmailSent(true);
-                        sendVerificationEmail(
-                          {
-                            email: user.email,
-                            callbackURL: "/profile",
-                          },
-                          {
-                            onSuccess: () => {
-                              toast.success("Verification email sent!");
-                              setEmailSent(false);
+                    {!user.emailVerified && (
+                      <button
+                        className="text-orange-400 underline text-sm sm:text-base underline-offset-2"
+                        onClick={() => {
+                          setEmailSent(true);
+                          sendVerificationEmail(
+                            {
+                              email: user.email,
+                              callbackURL: "/profile",
                             },
-                            onError: () => {
-                              toast.error("Failed to send verification email.");
-                              setEmailSent(false);
+                            {
+                              onSuccess: () => {
+                                toast.success("Verification email sent!");
+                                setEmailSent(false);
+                              },
+                              onError: () => {
+                                toast.error(
+                                  "Failed to send verification email.",
+                                );
+                                setEmailSent(false);
+                              },
                             },
-                          },
-                        );
-                      }}
-                      disabled={user.emailVerified}
-                    >
-                      {user.emailVerified
-                        ? "Your email is verified"
-                        : emailSent
+                          );
+                        }}
+                        disabled={emailSent}
+                      >
+                        {emailSent
                           ? "Sending..."
                           : "Click to Verify Email Address"}
-                    </button>
+                      </button>
+                    )}
                   </div>
                 </div>
 
