@@ -73,6 +73,9 @@ export async function POST(req: NextRequest) {
         userId: session.user.id,
         productId,
         quantity,
+        price: product.price,
+        name: product.name,
+        imageUrl: product.imageUrl,
       },
     });
 
@@ -83,5 +86,33 @@ export async function POST(req: NextRequest) {
       { error: "Failed to add to cart" },
       { status: 500 },
     );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  {
+    try {
+      const headersList = await headers();
+      const session = await auth.api.getSession({
+        headers: headersList,
+      });
+
+      if (!session) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      await prisma.cartItem.deleteMany();
+      return NextResponse.json(
+        {
+          success: true,
+        },
+        { status: 200 },
+      );
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+      return NextResponse.json(
+        { error: "Failed to clear cart" },
+        { status: 500 },
+      );
+    }
   }
 }

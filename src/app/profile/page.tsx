@@ -180,6 +180,13 @@ const ProfilePage = () => {
               </button>
             )}
             <button
+              onClick={() => router.push("/order")}
+              className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
+            >
+              <User className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <span>View Orders</span>
+            </button>
+            <button
               onClick={() => router.push("/change-password")}
               className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
             >

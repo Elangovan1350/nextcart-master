@@ -128,6 +128,33 @@ const CartPage = () => {
     );
   }
 
+  const orderedProducts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post("/api/orders", {
+        cartItems,
+      });
+
+      if (response.data.error) {
+        throw new Error(response.data.error);
+      }
+
+      // Clear cart after successful order
+      setCartItems([]);
+      setCart(0);
+      toast.success("Order placed successfully!");
+      router.push("/order");
+      await axios.delete("/api/cart");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to place order",
+      );
+      console.error("Error placing order:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Hero Section */}
@@ -293,7 +320,10 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                <button className="w-full px-4 sm:px-6 py-2.5 sm:py-4 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-bold text-sm sm:text-base transition transform hover:scale-105 mb-2 sm:mb-3">
+                <button
+                  className="w-full px-4 sm:px-6 py-2.5 sm:py-4 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-bold text-sm sm:text-base transition transform hover:scale-105 mb-2 sm:mb-3"
+                  onClick={() => orderedProducts()}
+                >
                   Proceed to Checkout
                 </button>
 
