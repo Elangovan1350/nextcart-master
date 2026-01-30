@@ -2,6 +2,7 @@
 
 import { useSession, signOut, sendVerificationEmail } from "@/lib/auth-client";
 import { LogOut, Mail, User, Shield, Lock } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ const ProfilePage = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleSignOut = async () => {
     setIsLoading(true);
@@ -97,35 +99,52 @@ const ProfilePage = () => {
                   <label className="text-slate-300 font-semibold block mb-2 sm:mb-3 text-sm sm:text-base">
                     Email Verification Status
                   </label>
-                  <div
-                    className="px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 rounded-lg border border-slate-600 flex items-center gap-2 cursor-pointer hover:border-slate-500 transition text-sm sm:text-base"
-                    onClick={() =>
-                      sendVerificationEmail(
-                        {
-                          email: user.email,
-                          callbackURL: "/profile",
-                        },
-                        {
-                          onSuccess: () => {
-                            toast.success("Verification email sent!");
-                          },
-                          onError: () => {
-                            toast.error("Failed to send verification email.");
-                          },
-                        },
-                      )
-                    }
-                  >
-                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                    <span
+                  <div className=" px-3 sm:px-4 py-2 sm:py-3 bg-slate-700 rounded-lg border border-slate-600 flex  items-center justify-between gap-2 cursor-pointer hover:border-slate-500 transition text-sm sm:text-base">
+                    <div className="flex  items-center gap-2">
+                      <Shield className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                      <span
+                        className={
+                          user.emailVerified
+                            ? "text-green-400"
+                            : "text-orange-400"
+                        }
+                      >
+                        {user.emailVerified ? "✓ Verified" : "⊘ Not Verified"}
+                      </span>
+                    </div>
+                    <button
                       className={
                         user.emailVerified
-                          ? "text-green-400"
-                          : "text-orange-400"
+                          ? "text-green-400 underline text-sm sm:text-base underline-offset-2"
+                          : "text-orange-400 underline text-sm sm:text-base underline-offset-2"
                       }
+                      onClick={() => {
+                        setEmailSent(true);
+                        sendVerificationEmail(
+                          {
+                            email: user.email,
+                            callbackURL: "/profile",
+                          },
+                          {
+                            onSuccess: () => {
+                              toast.success("Verification email sent!");
+                              setEmailSent(false);
+                            },
+                            onError: () => {
+                              toast.error("Failed to send verification email.");
+                              setEmailSent(false);
+                            },
+                          },
+                        );
+                      }}
+                      disabled={user.emailVerified}
                     >
-                      {user.emailVerified ? "✓ Verified" : "⊘ Not Verified"}
-                    </span>
+                      {user.emailVerified
+                        ? "Your email is verified"
+                        : emailSent
+                          ? "Sending..."
+                          : "Click to Verify Email Address"}
+                    </button>
                   </div>
                 </div>
 
@@ -136,10 +155,12 @@ const ProfilePage = () => {
                       Profile Picture
                     </label>
                     <div className="rounded-lg border border-slate-600 overflow-hidden bg-slate-700 p-3 sm:p-4 flex justify-center">
-                      <img
+                      <Image
                         src={user.image}
                         alt={user.name || "Profile"}
                         className="w-32 h-32 sm:w-40 sm:h-40 rounded-lg object-cover"
+                        width={160}
+                        height={160}
                       />
                     </div>
                   </div>

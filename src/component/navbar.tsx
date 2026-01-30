@@ -23,7 +23,7 @@ const navbar = () => {
   }, [session.data, setCartCount]);
   return (
     <nav className="bg-slate-950 bg-opacity-80 backdrop-blur-md border-b border-slate-700">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8  py-3 sm:py-4 flex justify-between items-center">
         <Link
           href="/"
           className="flex items-center gap-1.5 sm:gap-2 text-lg sm:text-2xl font-bold text-white"
@@ -132,19 +132,6 @@ const navbar = () => {
                   {session.data.user.name}
                 </Link>
               </div>
-
-              {/* <div className="w-full flex justify-center hover:ring-1 ring-inset ring-slate-700 py-2.5 sm:py-3">
-                <Link
-                  href="/cart"
-                  className="block text-sm sm:text-base text-slate-300 hover:text-white transition relative"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Cart
-                  <span className="bg-blue-500 text-white rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 ml-1 sm:ml-2 absolute -top-2 sm:-top-3 -right-4 sm:-right-6 text-xs">
-                    {cartCount}
-                  </span>
-                </Link>
-              </div> */}
             </>
           ) : (
             <>
