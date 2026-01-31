@@ -134,17 +134,20 @@ const CartPage = () => {
       const response = await axios.post("/api/orders", {
         cartItems,
       });
-
-      if (response.data.error) {
-        throw new Error(response.data.error);
+      if (response.data.success === true) {
+        console.log("Order placed successfully:", response.data);
+        setCartItems([]);
+        setCart(0);
+        toast.success("Order placed successfully!");
+        router.push("/order");
+        await axios.delete("/api/cart");
       }
-
-      // Clear cart after successful order
-      setCartItems([]);
-      setCart(0);
-      toast.success("Order placed successfully!");
-      router.push("/order");
-      await axios.delete("/api/cart");
+      if (!response.data) {
+        throw new Error("No response from server.");
+      }
+      if (response.data.success === false) {
+        throw new Error("Order could not be processed.");
+      }
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to place order",

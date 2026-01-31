@@ -103,7 +103,7 @@ const Products = () => {
           />
 
           {/* Sort and Filter Controls */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-between items-stretch sm:items-center">
+          <div className="flex flex-row gap-2 sm:gap-3 justify-between items-stretch sm:items-center">
             <div className="flex gap-2 items-center">
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -131,7 +131,7 @@ const Products = () => {
               <option value="reviews">Most Reviews</option>
             </select>
 
-            <div className="text-slate-300 text-xs sm:text-sm">
+            <div className="hidden sm:block text-slate-300 text-xs sm:text-sm">
               {filteredProducts.length} products
             </div>
           </div>
@@ -143,7 +143,10 @@ const Products = () => {
               {categories.map((category) => (
                 <div
                   key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setShowFilters(false);
+                  }}
                   className={`px-2 sm:px-3 py-2 rounded-lg font-medium text-xs sm:text-sm transition shrink-0 flex justify-center items-center text-center ${
                     selectedCategory === category
                       ? "bg-blue-600 text-white"
