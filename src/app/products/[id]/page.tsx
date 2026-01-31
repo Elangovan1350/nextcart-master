@@ -7,7 +7,6 @@ import axios from "axios";
 import useStore from "@/store/usestore";
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
-import { set } from "zod";
 
 interface Product {
   id: number;
@@ -30,6 +29,17 @@ interface CartItem {
   updatedAt: string;
 }
 
+interface Favorite {
+  id: number;
+  userId: string;
+  productId: number;
+  name: string;
+  imageUrl: string;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function ProductPage({
   params,
 }: {
@@ -42,21 +52,14 @@ export default function ProductPage({
   const [product, setProduct] = useState<Product>({} as Product);
   const [loading, setLoading] = useState(true);
   const [cartLoading, setCartLoading] = useState(false);
-  const { setCart: setCartCount, cart } = useStore();
+  const { setCart: setCartCount } = useStore();
   const [alreadyInCart, setAlreadyInCart] = useState(false);
   const [cartlist, setCartlist] = useState<CartItem[]>([]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product>(`/api/products/${id}`);
       setProduct(res.data);
-
-      if (!session.data) {
-        console.log("User not authenticated");
-        setLoading(false);
-
-        return;
-      }
-
       const res2 = await axios.get<CartItem[]>("/api/cart");
       setCartlist(res2.data);
       setLoading(false);
@@ -69,6 +72,13 @@ export default function ProductPage({
           console.log("item found in cart");
         }
       });
+
+      const resFav = await axios.get<Favorite[]>("/api/favorites");
+      console.log(resFav);
+      const isInFavorites = resFav.data.some(
+        (fav) => fav.productId === res.data.id,
+      );
+      setWishlist(isInFavorites);
     };
 
     fetchProducts();
@@ -100,8 +110,6 @@ export default function ProductPage({
     setAddedToCart(false);
     setCartLoading(true);
 
-    // const cartList = await axios.get<CartItem[]>("/api/cart");
-
     try {
       const response = await axios.post("/api/cart", {
         productId: product?.id,
@@ -121,6 +129,23 @@ export default function ProductPage({
 
     toast.success("Product added to cart!");
     return;
+  };
+
+  const favoretesAdded = async () => {
+    if (wishlist == false) {
+      const response = await axios.post("/api/favorites", {
+        productId: product?.id,
+        name: product?.name,
+        imageUrl: product?.imageUrl,
+        price: product?.price,
+      });
+      setWishlist(true);
+    } else {
+      const response = await axios.delete(`/api/favorites/${product?.id}`);
+      setWishlist(false);
+    }
+
+    toast.success(wishlist ? "Removed from wishlist" : "Added to wishlist");
   };
 
   return (
@@ -219,22 +244,7 @@ export default function ProductPage({
                   {product.description}
                 </p>
               </div>
-              /{/* Quantity Selector */}
-              {/* <div className="flex items-center gap-4">
-                <label htmlFor="quantity" className="font-semibold text-white">
-                  Quantity:
-                </label>
-                <input
-                  id="quantity"
-                  type="number"
-                  min="1"
-                  max="10"
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  className="w-24 px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div> */}
-              {/* Action Buttons */}
+
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-2 sm:pt-4">
                 <button
                   onClick={handleAddToCart}
@@ -258,7 +268,9 @@ export default function ProductPage({
                   )}
                 </button>
                 <button
-                  onClick={() => setWishlist(!wishlist)}
+                  onClick={() => {
+                    favoretesAdded();
+                  }}
                   className={`py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition transform hover:scale-105 ${
                     wishlist
                       ? "bg-red-600 hover:bg-red-700 text-white"
