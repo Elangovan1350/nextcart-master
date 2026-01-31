@@ -62,7 +62,6 @@ export default function ProductPage({
       setProduct(res.data);
       const res2 = await axios.get<CartItem[]>("/api/cart");
       setCartlist(res2.data);
-      setLoading(false);
       setCartCount(res2.data.length);
 
       res2.data.forEach((item) => {
@@ -79,6 +78,7 @@ export default function ProductPage({
         (fav) => fav.productId === res.data.id,
       );
       setWishlist(isInFavorites);
+      setLoading(false);
     };
 
     fetchProducts();
