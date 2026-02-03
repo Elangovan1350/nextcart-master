@@ -3,7 +3,6 @@ import Features from "@/component/homepage/features";
 import Cat from "@/component/homepage/cat";
 import Testimonials from "@/component/homepage/testimonials";
 import Featuredproducts from "@/component/homepage/featuredproducts";
-import { getSession, oneTap, useSession } from "@/lib/auth-client";
 
 const Home = async () => {
 
