@@ -6,7 +6,7 @@ import { ShoppingCart, Heart, ArrowLeft, Star, Loader } from "lucide-react";
 import axios from "axios";
 import useStore from "@/store/usestore";
 import { toast } from "sonner";
-import { useSession } from "@/lib/auth-client";
+import { getSession, useSession } from "@/lib/auth-client";
 
 interface Product {
   id: number;
@@ -45,7 +45,7 @@ export default function ProductPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const session = useSession();
+  // const session = getSession();
   const [addedToCart, setAddedToCart] = useState(false);
   const [wishlist, setWishlist] = useState(false);
   const { id } = use(params);
@@ -53,21 +53,29 @@ export default function ProductPage({
   const [loading, setLoading] = useState(true);
   const [cartLoading, setCartLoading] = useState(false);
   const { setCart: setCartCount } = useStore();
-  const [alreadyInCart, setAlreadyInCart] = useState(false);
+  // const [alreadyInCart, setAlreadyInCart] = useState(false);
   const [cartlist, setCartlist] = useState<CartItem[]>([]);
+
 
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product>(`/api/products/${id}`);
       setProduct(res.data);
+      const session = await getSession();
+      console.log(session);
+      
+      if(session.data=== null){
+        setLoading(false);
+        console.log("user not logged in");
+        return;
+      }
       const res2 = await axios.get<CartItem[]>("/api/cart");
       setCartlist(res2.data);
       setCartCount(res2.data.length);
-
+     
       res2.data.forEach((item) => {
         if (item.productId == res.data.id) {
           setAddedToCart(true);
-          setAlreadyInCart(true);
           console.log("item found in cart");
         }
       });
@@ -86,6 +94,7 @@ export default function ProductPage({
   }, []);
 
   const handleAddToCart = async () => {
+    const session = await getSession();
     if (session.data === null) {
       console.log("User not authenticated");
 
@@ -93,7 +102,7 @@ export default function ProductPage({
 
       return;
     }
-    if (alreadyInCart) {
+    if (addedToCart) {
       toast.error("This item is already in your cart.");
       return;
     }
@@ -101,7 +110,7 @@ export default function ProductPage({
     if (findItem) {
       setCartCount(cartlist.length);
 
-      setAlreadyInCart(true);
+      setAddedToCart(true);
       toast.error("This item is already in your cart.");
 
       console.log("item found in cart");
@@ -133,6 +142,14 @@ export default function ProductPage({
   };
 
   const favoretesAdded = async () => {
+    const session = await getSession();
+    if (session.data === null) {
+      console.log("User not authenticated");
+
+      toast.error("Please log in to add items to your wishlist.");
+
+      return;
+    }
     if (wishlist == false) {
       const response = await axios.post("/api/favorites", {
         productId: product?.id,

@@ -31,7 +31,7 @@ export default function SignUpPage() {
   useEffect(() => {
    
     
-      if(!session.data){
+      if(!session.data===null){
         router.push("/")
       } 
   }, [router, session]);
