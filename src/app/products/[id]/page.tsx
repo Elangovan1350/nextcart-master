@@ -79,6 +79,7 @@ export default function ProductPage({
       );
       setWishlist(isInFavorites);
       setLoading(false);
+
     };
 
     fetchProducts();

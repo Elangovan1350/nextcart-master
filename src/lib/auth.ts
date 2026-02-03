@@ -15,11 +15,13 @@ const transporter = nodemailer.createTransport({
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET as string,
+
   plugins: [
     admin({
       defaultRole: "user", // Explicitly set the default for new signups
       adminRole: "admin", // Define what the admin role is called
     }),
+    oneTap(),
   ],
   emailAndPassword: {
     enabled: true,

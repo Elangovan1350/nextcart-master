@@ -3,8 +3,12 @@ import Features from "@/component/homepage/features";
 import Cat from "@/component/homepage/cat";
 import Testimonials from "@/component/homepage/testimonials";
 import Featuredproducts from "@/component/homepage/featuredproducts";
+import { getSession, oneTap, useSession } from "@/lib/auth-client";
 
-const Home = () => {
+const Home = async () => {
+
+    
+  
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Hero Section */}
