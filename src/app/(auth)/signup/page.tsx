@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {  oneTap, signIn, signUp,useSession } from "@/lib/auth-client";
+import { oneTap, signIn, signUp,useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
 
