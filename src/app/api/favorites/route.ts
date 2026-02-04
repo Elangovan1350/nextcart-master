@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     }
     const { productId, name, imageUrl, price } = await request.json();
     // Further processing can be done here
-    await prisma.favorite.create({
+    const favorite = await prisma.favorite.create({
       data: {
         userId: session.user.id,
         productId,
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { success: true, message: "Favorite added successfully" },
+      { success: true, favoriteId: favorite.id, message: "Favorite added successfully" },
       { status: 201 },
     );
   } catch (error) {

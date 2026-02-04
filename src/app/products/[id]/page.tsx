@@ -55,6 +55,7 @@ export default function ProductPage({
   const { setCart: setCartCount } = useStore();
   const [cartlist, setCartlist] = useState<CartItem[]>([]);
   const[favoreteLoading,setFavoreteLoading] = useState(false);
+  const[favoriteId,setFavoriteId] = useState<number | null>(null);
 
 
   useEffect(() => {
@@ -160,12 +161,14 @@ export default function ProductPage({
       setWishlist(true);
       if(response.status === 201){
         setFavoreteLoading(false);
+        setFavoriteId(response.data.favoriteId);
       }
     } else {
-      const response = await axios.delete(`/api/favorites/${product?.id}`);
+      const response = await axios.delete(`/api/favorites/${favoriteId}`);
       setWishlist(false);
       if(response.status === 200){
         setFavoreteLoading(false);
+        setFavoriteId(null);
       }
     }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession, signOut, sendVerificationEmail } from "@/lib/auth-client";
-import { LogOut, Mail, User, Shield, Lock } from "lucide-react";
+import { LogOut, Mail, User, Shield, Lock, Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -168,29 +168,42 @@ const ProfilePage = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-            {/* Change Password Button */}
+          <div className="space-y-3 sm:space-y-4">
+            {/* Admin Dashboard Button */}
             {session.user.role === "admin" && (
               <button
                 onClick={() => router.push("/admin")}
-                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
+                className="group w-full px-4 sm:px-6 py-3 sm:py-4 bg-linear-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl font-semibold flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/30 text-sm sm:text-base"
               >
-                <Shield className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                <Shield className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:rotate-12 transition-transform duration-300" />
                 <span>Admin Dashboard</span>
               </button>
             )}
+
+            {/* View Orders Button */}
             <button
               onClick={() => router.push("/order")}
-              className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
+              className="group w-full px-4 sm:px-6 py-3 sm:py-4 bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-semibold flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/30 text-sm sm:text-base"
             >
-              <User className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <User className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:scale-110 transition-transform duration-300" />
               <span>View Orders</span>
             </button>
+
+            {/* View Favorites Button */}
+            <button
+              onClick={() => router.push("/favorates")}
+              className="group w-full px-4 sm:px-6 py-3 sm:py-4 bg-linear-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-xl font-semibold flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-pink-500/30 text-sm sm:text-base"
+            >
+              <Heart className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:scale-110 group-hover:fill-white transition-all duration-300" />
+              <span>View Favorites</span>
+            </button>
+              
+            {/* Change Password Button */}
             <button
               onClick={() => router.push("/change-password")}
-              className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
+              className="group w-full px-4 sm:px-6 py-3 sm:py-4 bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-semibold flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/30 text-sm sm:text-base"
             >
-              <Lock className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <Lock className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:rotate-12 transition-transform duration-300" />
               <span>Change Password</span>
             </button>
 
@@ -198,9 +211,9 @@ const ProfilePage = () => {
             <button
               onClick={handleSignOut}
               disabled={isLoading}
-              className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 text-sm sm:text-base"
+              className="group w-full px-4 sm:px-6 py-3 sm:py-4 bg-linear-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 disabled:from-red-800 disabled:to-rose-800 disabled:opacity-70 text-white rounded-xl font-semibold flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-red-500/30 disabled:hover:scale-100 disabled:hover:shadow-none text-sm sm:text-base"
             >
-              <LogOut className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <LogOut className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:translate-x-1 transition-transform duration-300" />
               <span>{isLoading ? "Signing Out..." : "Sign Out"}</span>
             </button>
 

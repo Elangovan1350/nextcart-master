@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { log } from "console";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -9,7 +8,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const productId = parseInt(id);
+  const favoriteId = parseInt(id);
   try {
     const headersList = await headers();
     const session = await auth.api.getSession({
@@ -18,27 +17,10 @@ export async function DELETE(
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const userFav = await prisma.user.findUnique({
-      where: {
-        id: session.user.id,
-      },
-      include: {
-        favorites: true,
-      },
-    });
 
-    const favoriteToDelete = userFav?.favorites.find(
-      (fav) => fav.productId === productId,
-    );
-    if (!favoriteToDelete) {
-      return NextResponse.json(
-        { error: "Favorite not found" },
-        { status: 404 },
-      );
-    }
     const deletedFavorite = await prisma.favorite.delete({
       where: {
-        id: favoriteToDelete.id,
+        id: favoriteId,
       },
     });
     return NextResponse.json(
