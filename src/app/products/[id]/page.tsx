@@ -47,7 +47,7 @@ export default function ProductPage({
 }) {
   const session = useSession();
   const [addedToCart, setAddedToCart] = useState(false);
-  const [wishlist, setWishlist] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const { id } = use(params);
   const [product, setProduct] = useState<Product>({} as Product);
   const [loading, setLoading] = useState(true);
@@ -56,6 +56,7 @@ export default function ProductPage({
   const [cartlist, setCartlist] = useState<CartItem[]>([]);
   const[favoreteLoading,setFavoreteLoading] = useState(false);
   const[favoriteId,setFavoriteId] = useState<number | null>(null);
+  
 
 
   useEffect(() => {
@@ -84,9 +85,14 @@ export default function ProductPage({
       const resFav = await axios.get<Favorite[]>("/api/favorites");
       console.log(resFav);
       const isInFavorites = resFav.data.some(
-        (fav) => fav.productId === res.data.id,
+        (fav) => {
+          if(fav.productId === res.data.id){
+            setFavoriteId(fav.id);
+          }
+          return fav.productId === res.data.id
+        },
       );
-      setWishlist(isInFavorites);
+      setIsFavorite(isInFavorites);
       setLoading(false);
 
     };
@@ -151,28 +157,30 @@ export default function ProductPage({
 
       return;
     }
-    if (wishlist == false) {
+    if (isFavorite == false) {
       const response = await axios.post("/api/favorites", {
         productId: product?.id,
         name: product?.name,
         imageUrl: product?.imageUrl,
         price: product?.price,
       });
-      setWishlist(true);
+      setIsFavorite(true);
       if(response.status === 201){
         setFavoreteLoading(false);
         setFavoriteId(response.data.favoriteId);
       }
     } else {
+     
       const response = await axios.delete(`/api/favorites/${favoriteId}`);
-      setWishlist(false);
+      setIsFavorite(false);
       if(response.status === 200){
         setFavoreteLoading(false);
         setFavoriteId(null);
       }
+    
     }
 
-    toast.success(wishlist ? "Removed from wishlist" : "Added to wishlist");
+    toast.success(isFavorite ? "Removed from favorites" : "Added to favorites");
   };
 
   return (
@@ -305,7 +313,7 @@ export default function ProductPage({
                     favoretesAdded();
                   }}
                   className={`py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition transform hover:scale-105 ${
-                    wishlist&& !favoreteLoading
+                    isFavorite&& !favoreteLoading
                       ? "bg-red-600 hover:bg-red-700 text-white cursor-pointer border-2 border-red-600 hover:border-red-500"
                       : "border-2 border-slate-600 hover:border-blue-500 text-white hover:text-blue-400 cursor-pointer"
                   }`}
@@ -316,7 +324,7 @@ export default function ProductPage({
                     </span>
                   ) : (
                     <Heart
-                      className={`w-4 h-4 sm:w-5 sm:h-5 ${wishlist ? "fill-current" : ""}`}
+                      className={`w-4 h-4 sm:w-5 sm:h-5 ${isFavorite ? "fill-current" : ""}`}
                     />
                   )}
                 </button>
