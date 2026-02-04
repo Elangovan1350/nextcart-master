@@ -1,8 +1,9 @@
 "use client";
 
 import axios from "axios";
-import { ShoppingCart, Star, Filter } from "lucide-react";
+import { ShoppingCart, Star, Filter, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { log } from "node:console";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -163,30 +164,40 @@ const Products = () => {
 
       {/* Products Grid */}
       {Loading ? (
-        <div className="h-36 flex items-center justify-center bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-          <p className="text-base sm:text-lg text-slate-400">
-            Loading products...
+       <div className=" bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center py-32 px-4">
+        <div className="text-center">
+          <div className="animate-bounce text-4xl sm:text-5xl mb-3 sm:mb-4">
+            🛒
+          </div>
+          <p className="text-slate-400 flex items-center justify-center gap-2 text-sm sm:text-base">
+            <Loader2 className="animate-spin w-4 h-4 sm:w-5 sm:h-5" /> Loading
+            your products...
           </p>
         </div>
+      </div>
       ) : (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {filteredProducts.map((product) => (
                 <div
-                  onClick={() => {
+                 onClick={() => {
                     router.push(`/products/${product.id}`);
                   }}
                   key={product.id}
                   className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition transform hover:scale-105 group cursor-pointer"
                 >
                   {/* Product Image */}
-                  <div className="bg-linear-to-br from-slate-700 to-slate-800 h-40 flex items-center justify-center text-6xl group-hover:scale-110 transition">
+                  <div
+                  
+                   className="bg-linear-to-br from-slate-700 to-slate-800 h-40 flex items-center justify-center text-6xl group-hover:scale-110 transition">
                     {product.imageUrl}
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-3 sm:p-4">
+                  <div 
+                   
+                  className="p-3 sm:p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1 min-w-0">
                         <h3 className="text-xs sm:text-sm font-bold text-white line-clamp-2">
@@ -223,11 +234,14 @@ const Products = () => {
                       <span className="text-base sm:text-lg font-bold text-blue-400">
                         ${product.price}
                       </span>
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition shrink-0">
+                      <button
+                     
+                      className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition shrink-0">
                         <ShoppingCart className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
+                  
                 </div>
               ))}
             </div>

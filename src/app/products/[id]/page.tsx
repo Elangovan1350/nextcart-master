@@ -45,7 +45,7 @@ export default function ProductPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // const session = getSession();
+  const session = useSession();
   const [addedToCart, setAddedToCart] = useState(false);
   const [wishlist, setWishlist] = useState(false);
   const { id } = use(params);
@@ -53,8 +53,8 @@ export default function ProductPage({
   const [loading, setLoading] = useState(true);
   const [cartLoading, setCartLoading] = useState(false);
   const { setCart: setCartCount } = useStore();
-  // const [alreadyInCart, setAlreadyInCart] = useState(false);
   const [cartlist, setCartlist] = useState<CartItem[]>([]);
+  const[favoreteLoading,setFavoreteLoading] = useState(false);
 
 
   useEffect(() => {
@@ -94,7 +94,6 @@ export default function ProductPage({
   }, []);
 
   const handleAddToCart = async () => {
-    const session = await getSession();
     if (session.data === null) {
       console.log("User not authenticated");
 
@@ -142,9 +141,10 @@ export default function ProductPage({
   };
 
   const favoretesAdded = async () => {
-    const session = await getSession();
+    setFavoreteLoading(true);
     if (session.data === null) {
       console.log("User not authenticated");
+      setFavoreteLoading(false);
 
       toast.error("Please log in to add items to your wishlist.");
 
@@ -158,9 +158,15 @@ export default function ProductPage({
         price: product?.price,
       });
       setWishlist(true);
+      if(response.status === 201){
+        setFavoreteLoading(false);
+      }
     } else {
       const response = await axios.delete(`/api/favorites/${product?.id}`);
       setWishlist(false);
+      if(response.status === 200){
+        setFavoreteLoading(false);
+      }
     }
 
     toast.success(wishlist ? "Removed from wishlist" : "Added to wishlist");
@@ -193,11 +199,17 @@ export default function ProductPage({
 
       {/* Product Section */}
       {loading ? (
-        <div className="h-36 flex items-center justify-center bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-          <p className="text-base sm:text-lg text-slate-400">
-            Loading product...
+        <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="animate-bounce text-4xl sm:text-5xl mb-3 sm:mb-4">
+            🛒
+          </div>
+          <p className="text-slate-400 flex items-center justify-center gap-2 text-sm sm:text-base">
+            <Loader className="animate-spin w-4 h-4 sm:w-5 sm:h-5" /> Loading
+            your product...
           </p>
         </div>
+      </div>
       ) : (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
@@ -290,14 +302,20 @@ export default function ProductPage({
                     favoretesAdded();
                   }}
                   className={`py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition transform hover:scale-105 ${
-                    wishlist
-                      ? "bg-red-600 hover:bg-red-700 text-white"
-                      : "border-2 border-slate-600 hover:border-blue-500 text-white hover:text-blue-400"
+                    wishlist&& !favoreteLoading
+                      ? "bg-red-600 hover:bg-red-700 text-white cursor-pointer border-2 border-red-600 hover:border-red-500"
+                      : "border-2 border-slate-600 hover:border-blue-500 text-white hover:text-blue-400 cursor-pointer"
                   }`}
                 >
-                  <Heart
-                    className={`w-4 h-4 sm:w-5 sm:h-5 ${wishlist ? "fill-current" : ""}`}
-                  />
+                  {favoreteLoading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />{" "}
+                    </span>
+                  ) : (
+                    <Heart
+                      className={`w-4 h-4 sm:w-5 sm:h-5 ${wishlist ? "fill-current" : ""}`}
+                    />
+                  )}
                 </button>
               </div>
               {/* Product Info */}
@@ -326,38 +344,7 @@ export default function ProductPage({
             </div>
           </div>
 
-          {/* Reviews Section */}
-          {/* <div className="mt-20 bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl p-8 md:p-12">
-          <h2 className="text-2xl font-bold text-white mb-8">
-            Customer Reviews
-          </h2>
-          <div className="space-y-6">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="border-b border-slate-700 pb-6 last:border-b-0"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-semibold text-white">
-                    Customer {i + 1}
-                  </span>
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, j) => (
-                      <Star
-                        key={j}
-                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-slate-300">
-                  Great product! Highly recommend it. Perfect quality and fast
-                  delivery.
-                </p>
-              </div>
-            ))}
-          </div>
-        </div> */}
+         
         </div>
       )}
     </div>

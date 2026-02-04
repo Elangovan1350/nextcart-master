@@ -267,40 +267,7 @@ export default function OrderPage() {
           </div>
         )}
 
-        {/* Summary */}
-        {/* {orders.length > 0 && (
-          <div className="mt-8 sm:mt-12 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl sm:rounded-2xl p-6 sm:p-8">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
-              <div className="border-b sm:border-b-0 sm:border-r border-slate-700 pb-4 sm:pb-0 sm:pr-8">
-                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2 sm:mb-3">
-                  Total Orders
-                </p>
-                <p className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-purple-500">
-                  {orders.length}
-                </p>
-              </div>
-              <div className="border-b sm:border-b-0 sm:border-r border-slate-700 pb-4 sm:pb-0 sm:pr-8">
-                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2 sm:mb-3">
-                  Total Items
-                </p>
-                <p className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-purple-500">
-                  {orders.reduce((sum, order) => sum + order.quantity, 0)}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2 sm:mb-3">
-                  Amount Spent
-                </p>
-                <p className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-purple-500">
-                  $
-                  {orders
-                    .reduce((sum, order) => sum + order.total, 0)
-                    .toFixed(2)}
-                </p>
-              </div>
-            </div>
-          </div>
-        )} */}
+       
       </div>
     </div>
   );
