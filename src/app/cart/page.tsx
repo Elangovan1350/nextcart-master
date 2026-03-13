@@ -44,7 +44,7 @@ const CartPage = () => {
 
   useEffect(() => {
     if (!isPending && !session) {
-      router.push("/login");
+      router.replace("/login");
       return;
     }
   }, [isPending, session]);
@@ -52,13 +52,15 @@ const CartPage = () => {
     data: cartItems = [],
     mutate,
     isLoading: cartLoading,
-  } = useSWR<CartItem[]>("/api/cart", () =>
+  } = useSWR<CartItem[]>(session ? "/api/cart" : null, () =>
     axios.get("/api/cart").then((res) => res.data),
   );
   const { data: products, isLoading: productsLoading } = useSWR<Product[]>(
-    "/api/products",
-    () => axios.get("/api/products").then((res) => res.data),
+    session ? "/api/products" : null,
+    () => axios.get("/api/products").then((res) => res.data.products),
   );
+  console.log("cartItems", cartItems);
+  console.log("products", products);
 
   const updateQuantity = async (cartItemId: number, newQuantity: number) => {
     if (newQuantity < 1 || isUpdating) return;
@@ -89,7 +91,7 @@ const CartPage = () => {
   };
 
   const totalPrice = cartItems.reduce((sum, item) => {
-    const product = products?.[item.productId];
+    const product = products?.find((product) => product.id === item.productId);
     return sum + (product?.price || 0) * item.quantity;
   }, 0);
 
@@ -172,7 +174,9 @@ const CartPage = () => {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-3 sm:space-y-4">
               {cartItems.map((item) => {
-                const product = products?.[item.productId - 1];
+                const product = products?.find(
+                  (product) => product.id === item.productId,
+                );
                 if (!product) return null;
 
                 return (
