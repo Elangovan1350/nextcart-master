@@ -19,27 +19,24 @@ interface Product {
 
 const Products = () => {
   const router = useRouter();
+  const [pageIndex, setPageIndex] = useState(1);
+  const [limit, setLimit] = useState(12);
+  const [totalProducts, setTotalProducts] = useState(0);
   const { data: allProducts = [], isLoading: Loading } = useSWR<Product[]>(
-    "/api/products",
-    () => axios.get("/api/products").then((res) => res.data),
+    `/api/products?page=${pageIndex}&limit=${limit}`,
+    () =>
+      axios
+        .get(`/api/products?page=${pageIndex}&limit=${limit}`)
+        .then((res) => {
+          setTotalProducts(res.data.totalProducts);
+          return res.data.products;
+        }),
   );
 
-  const categories = [
-    "All",
-    "Audio",
-    "Wearables",
-    "Cables & Chargers",
-    "Power & Charging",
-    "Electronics",
-    "Computing",
-    "Lighting",
-    "Smart Home",
-    "Storage",
-    "Accessories",
-    "Camera & Video",
-    "Gadgets",
-    "Gaming",
-  ];
+  const totalPages = Math.ceil(totalProducts / limit);
+
+  const allCategories = allProducts.map((product) => product.category);
+  const categories = ["All", ...new Set(allCategories)];
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,9 +48,12 @@ const Products = () => {
     .filter((product) => {
       const matchesCategory =
         selectedCategory === "All" || product.category === selectedCategory;
+      console.log("selectedCategory=", selectedCategory);
+
       const matchesSearch =
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      console.log("matchesSearch=", matchesSearch);
       return matchesCategory && matchesSearch;
     })
     .sort((a, b) => {
@@ -250,6 +250,23 @@ const Products = () => {
         >
           Clear Filters
         </button>
+      </div>
+      {/* Pagination */}
+      <div className="flex justify-center items-center pb-8 sm:pb-12 px-4 gap-2">
+        {Array(totalPages)
+          .fill(0)
+          .map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setPageIndex(i + 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition text-sm sm:text-base"
+            >
+              {i + 1}
+            </button>
+          ))}
       </div>
     </div>
   );
