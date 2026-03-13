@@ -22,6 +22,7 @@ const Products = () => {
   const [pageIndex, setPageIndex] = useState(1);
   const [limit, setLimit] = useState(12);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: allProducts = [], isLoading: Loading } = useSWR<Product[]>(
     `/api/products?page=${pageIndex}&limit=${limit}`,
     () =>
@@ -258,11 +259,15 @@ const Products = () => {
           .map((_, i) => (
             <button
               key={i}
+              // disabled={currentPage === i + 1}
               onClick={() => {
                 setPageIndex(i + 1);
+                setCurrentPage(i + 1);
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition text-sm sm:text-base"
+              className={`px-4 sm:px-6 py-2 sm:py-3 bg-blue-600  text-white rounded-lg font-semibold transition text-sm sm:text-base ${
+                currentPage === i + 1 ? "bg-blue-900" : "hover:bg-blue-700"
+              }`}
             >
               {i + 1}
             </button>
