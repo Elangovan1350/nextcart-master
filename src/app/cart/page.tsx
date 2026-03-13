@@ -56,11 +56,9 @@ const CartPage = () => {
     axios.get("/api/cart").then((res) => res.data),
   );
   const { data: products, isLoading: productsLoading } = useSWR<Product[]>(
-    session ? "/api/products" : null,
-    () => axios.get("/api/products").then((res) => res.data.products),
+    session ? "/api/totalproducts" : null,
+    () => axios.get("/api/totalproducts").then((res) => res.data),
   );
-  console.log("cartItems", cartItems);
-  console.log("products", products);
 
   const updateQuantity = async (cartItemId: number, newQuantity: number) => {
     if (newQuantity < 1 || isUpdating) return;
