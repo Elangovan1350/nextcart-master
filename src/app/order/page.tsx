@@ -5,6 +5,7 @@ import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import useSWR from "swr";
 
 interface Order {
   id: number;
@@ -20,44 +21,26 @@ interface Order {
   updatedAt: string;
 }
 
+const fetcher = (url: string) => axios.get(url).then((res) => res.data.orders);
+
 export default function OrderPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const router = useRouter();
+  const {
+    data: orders = [],
+    isLoading,
+    error,
+  } = useSWR<Order[]>(session?.user ? "/api/orders" : null, fetcher);
 
   useEffect(() => {
     // Redirect to login if not authenticated
-    if (!session?.user) {
-      router.push("/login");
+    if (!session?.user && !isPending) {
+      router.replace("/login");
       return;
     }
 
     // Fetch user orders
-    if (session?.user) {
-      fetchOrders();
-    }
-  }, [session, router]);
-
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
-      const response = await axios("/api/orders");
-
-      const data = response.data;
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      setOrders(data.orders || []);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-      console.error("Error fetching orders:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [session, router, isPending]);
 
   const getStatusColor = (status: string): string => {
     switch (status.toUpperCase()) {
@@ -84,7 +67,7 @@ export default function OrderPage() {
     });
   };
 
-  if (session === undefined || loading) {
+  if (isLoading || isPending) {
     return (
       <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
@@ -113,7 +96,7 @@ export default function OrderPage() {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12">
         {error && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-8 backdrop-blur-sm">
-            <p className="text-red-300">{error}</p>
+            <p className="text-red-300">{error.message}</p>
           </div>
         )}
 
@@ -266,8 +249,6 @@ export default function OrderPage() {
             ))}
           </div>
         )}
-
-       
       </div>
     </div>
   );

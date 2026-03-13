@@ -4,6 +4,7 @@ import axios from "axios";
 import { Heart, Star, Filter, Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 interface Favorite {
   id: number;
@@ -20,37 +21,28 @@ interface Favorite {
   };
 }
 
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
 const Favorites = () => {
   const router = useRouter();
-  const [allFavorites, setAllFavorites] = useState<Favorite[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recent");
   const [removingId, setRemovingId] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
-
-  const fetchFavorites = async () => {
-    try {
-      const res = await axios.get<Favorite[]>("/api/favorites");
-      setAllFavorites(res.data);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-      setLoading(false);
-    }
-  };
+  const {
+    data: allFavorites = [],
+    isLoading: Loading,
+    mutate,
+  } = useSWR<Favorite[]>("/api/favorites", fetcher);
 
   const handleRemoveFavorite = async (id: number) => {
     try {
       setRemovingId(id);
-     const res = await axios.delete(`/api/favorites/${id}`);
-     if(res.status === 200){
-      setAllFavorites(allFavorites.filter((fav) => fav.id !== id));
-      setRemovingId(null);
-     }
+      const res = await axios.delete(`/api/favorites/${id}`);
+      if (res.status === 200) {
+        mutate();
+        setRemovingId(null);
+      }
     } catch (error) {
       console.error("Error removing favorite:", error);
       setRemovingId(null);
@@ -70,7 +62,9 @@ const Favorites = () => {
       if (sortBy === "price-high") return b.price - a.price;
       if (sortBy === "name") return a.name.localeCompare(b.name);
       if (sortBy === "recent")
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       return 0;
     });
 
@@ -133,7 +127,7 @@ const Favorites = () => {
       </section>
 
       {/* Favorites Grid */}
-      {loading ? (
+      {Loading ? (
         <div className="bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center py-32 px-4">
           <div className="text-center">
             <div className="animate-bounce text-4xl sm:text-5xl mb-3 sm:mb-4">

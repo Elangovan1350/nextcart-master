@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import useSWR from "swr";
 
 interface Product {
   id: number;
@@ -35,53 +36,36 @@ interface CartItem {
 }
 
 const CartPage = () => {
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const router = useRouter();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [products, setProducts] = useState<Record<number, Product>>({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-  const [deleting, setDeleting] = useState<boolean>(false);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
   const { setCart } = useStore();
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!session) {
+    if (!isPending && !session) {
       router.push("/login");
       return;
     }
-
-    const fetchData = async () => {
-      try {
-        // Fetch cart items
-        const cartRes = await axios.get("/api/cart");
-        setCartItems(cartRes.data);
-        setCart(cartRes.data.length);
-
-        // Fetch all products
-        const productsRes = await axios.get<Product[]>("/api/products");
-
-        setProducts(productsRes.data);
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [session, router]);
+  }, [isPending, session]);
+  const {
+    data: cartItems = [],
+    mutate,
+    isLoading: cartLoading,
+  } = useSWR<CartItem[]>("/api/cart", () =>
+    axios.get("/api/cart").then((res) => res.data),
+  );
+  const { data: products, isLoading: productsLoading } = useSWR<Product[]>(
+    "/api/products",
+    () => axios.get("/api/products").then((res) => res.data),
+  );
 
   const updateQuantity = async (cartItemId: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
+    if (newQuantity < 1 || isUpdating) return;
     setIsUpdating(true);
     try {
-      await axios.patch(`/api/cart/${cartItemId}`, { quantity: newQuantity });
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === cartItemId ? { ...item, quantity: newQuantity } : item,
-        ),
-      );
+      await axios.put(`/api/cart/${cartItemId}`, { quantity: newQuantity });
+      await mutate();
     } catch (error) {
       console.error("Error updating cart:", error);
     } finally {
@@ -91,28 +75,27 @@ const CartPage = () => {
 
   const removeFromCart = async (cartItemId: number) => {
     setDeletingId(cartItemId);
-    setDeleting(true);
 
     try {
       await axios.delete(`/api/cart/${cartItemId}`);
-      setCartItems(cartItems.filter((item) => item.id !== cartItemId));
-      setCart(cartItems.length - 1);
+      const updatedCart = await mutate();
+      setCart(updatedCart?.length || 0);
+      toast.success("Item removed from cart");
     } catch (error) {
       console.error("Error removing from cart:", error);
     } finally {
-      setDeleting(false);
-      toast.success("Item removed from cart");
+      setDeletingId(null);
     }
   };
 
   const totalPrice = cartItems.reduce((sum, item) => {
-    const product = products[item.productId];
+    const product = products?.[item.productId];
     return sum + (product?.price || 0) * item.quantity;
   }, 0);
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  if (isLoading) {
+  if (productsLoading || !session || cartLoading) {
     return (
       <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
         <div className="text-center">
@@ -130,31 +113,19 @@ const CartPage = () => {
 
   const orderedProducts = async () => {
     try {
-      setIsLoading(true);
       const response = await axios.post("/api/orders", {
         cartItems,
       });
-      if (response.data.success === true) {
-        console.log("Order placed successfully:", response.data);
-        setCartItems([]);
+      if (response.data.success) {
+        await axios.delete("/api/cart");
+
+        mutate([]);
         setCart(0);
         toast.success("Order placed successfully!");
         router.push("/order");
-        await axios.delete("/api/cart");
-      }
-      if (!response.data) {
-        throw new Error("No response from server.");
-      }
-      if (response.data.success === false) {
-        throw new Error("Order could not be processed.");
       }
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to place order",
-      );
-      console.error("Error placing order:", error);
-    } finally {
-      setIsLoading(false);
+      toast.error("Failed to place order");
     }
   };
 
@@ -201,7 +172,7 @@ const CartPage = () => {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-3 sm:space-y-4">
               {cartItems.map((item) => {
-                const product = products[item.productId - 1];
+                const product = products?.[item.productId - 1];
                 if (!product) return null;
 
                 return (
@@ -244,7 +215,7 @@ const CartPage = () => {
                           className="p-1.5 sm:p-2 hover:bg-red-600/20 text-red-400 rounded-lg transition shrink-0"
                           title="Remove from cart"
                         >
-                          {deleting && deletingId === item.id ? (
+                          {deletingId === item.id ? (
                             <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                           ) : (
                             <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />

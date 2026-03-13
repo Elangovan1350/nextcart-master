@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-export async function PATCH(
+export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
