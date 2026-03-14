@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -8,6 +8,7 @@ import { Trash2, Edit2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "@/lib/auth-client";
+import useSWR from "swr";
 
 interface Product {
   id: number;
@@ -29,6 +30,7 @@ const productSchema = z.object({
       (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
       "Price must be a valid number greater than 0",
     ),
+
   imageUrl: z.string().optional(),
   category: z.string().min(1, "Category is required"),
 });
@@ -36,13 +38,19 @@ const productSchema = z.object({
 type ProductFormData = z.infer<typeof productSchema>;
 
 export default function AdminPage() {
-  const { data: session } = useSession();
-  const [products, setProducts] = useState<Product[]>([]);
-  //   const [loading, setLoading] = useState(true);
+  const { data: session, isPending } = useSession();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [sessionLoading, setSessionLoading] = useState(true);
+
+  const {
+    data: products,
+    isLoading: loading,
+    error,
+    mutate,
+  } = useSWR<Product[]>(session ? "/api/totalproducts" : null, () =>
+    axios.get("/api/totalproducts").then((res) => res.data),
+  );
 
   console.log(session?.user);
 
@@ -63,27 +71,7 @@ export default function AdminPage() {
     },
   });
 
-  useEffect(() => {
-    if (session?.user.role === "admin") {
-      fetchProducts();
-      setSessionLoading(false);
-    } else {
-      setSessionLoading(false);
-    }
-  }, [session]);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get("/api/products");
-      setProducts(response.data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      toast.error("Failed to fetch products");
-      setSessionLoading(false);
-    }
-  };
-
-  if (sessionLoading) {
+  if (loading || isPending) {
     return (
       <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 p-6 flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
@@ -121,7 +109,7 @@ export default function AdminPage() {
       reset();
       setEditingId(null);
       setShowForm(false);
-      fetchProducts();
+      mutate();
     } catch (error) {
       console.error("Error saving product:", error);
       toast.error("Error saving product");
@@ -144,9 +132,11 @@ export default function AdminPage() {
     if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      await axios.delete(`/api/products/${id}`);
-      toast.success("Product deleted successfully");
-      fetchProducts();
+      const res = await axios.delete(`/api/products/${id}`);
+      if (res.status === 201) {
+        toast.success("Product deleted successfully");
+        mutate();
+      }
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error("Error deleting product");
@@ -297,7 +287,7 @@ export default function AdminPage() {
 
         {/* Products Table */}
         <div className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
-          {products.length === 0 ? (
+          {products?.length === 0 ? (
             <div className="p-8 text-center text-gray-400">
               No products found. Add your first product to get started!
             </div>
@@ -326,7 +316,7 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {products.map((product, index) => (
+                    {products?.map((product, index) => (
                       <tr
                         key={product.id}
                         className={`border-b border-slate-700 hover:bg-slate-700 transition ${
@@ -347,7 +337,10 @@ export default function AdminPage() {
                         </td>
                         <td className="px-6 py-4 flex gap-3">
                           <button
-                            onClick={() => handleEdit(product)}
+                            onClick={() => {
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                              handleEdit(product);
+                            }}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded flex items-center gap-2 transition text-sm"
                           >
                             <Edit2 size={16} /> Edit
@@ -367,7 +360,7 @@ export default function AdminPage() {
 
               {/* Mobile Card View */}
               <div className="lg:hidden space-y-4 p-4">
-                {products.map((product) => (
+                {products?.map((product) => (
                   <div
                     key={product.id}
                     className="bg-slate-700 p-4 rounded-lg border border-slate-600 space-y-3"
@@ -406,7 +399,10 @@ export default function AdminPage() {
                     )}
                     <div className="flex gap-2 pt-2">
                       <button
-                        onClick={() => handleEdit(product)}
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          handleEdit(product);
+                        }}
                         className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 sm:py-3 rounded flex items-center justify-center gap-2 transition text-sm font-medium touch-manipulation"
                       >
                         <Edit2 size={16} /> Edit
@@ -430,23 +426,14 @@ export default function AdminPage() {
           <div className="bg-slate-800 p-4 sm:p-6 rounded-lg border border-slate-700">
             <p className="text-gray-400 text-sm">Total Products</p>
             <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
-              {products.length}
+              {products?.length}
             </p>
           </div>
-          <div className="bg-slate-800 p-4 sm:p-6 rounded-lg border border-slate-700">
-            <p className="text-gray-400 text-sm">Average Price</p>
-            <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
-              $
-              {(
-                products.reduce((sum, p) => sum + p.price, 0) /
-                  products.length || 0
-              ).toFixed(2)}
-            </p>
-          </div>
+
           <div className="bg-slate-800 p-4 sm:p-6 rounded-lg border border-slate-700">
             <p className="text-gray-400 text-sm">Total Value</p>
             <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
-              ${products.reduce((sum, p) => sum + p.price, 0).toFixed(2)}
+              ${products?.reduce((sum, p) => sum + p.price, 0).toFixed(2)}
             </p>
           </div>
         </div>

@@ -3,7 +3,7 @@
 import axios from "axios";
 import { ShoppingCart, Star, Filter, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 
 interface Product {
@@ -21,22 +21,18 @@ const Products = () => {
   const router = useRouter();
   const [pageIndex, setPageIndex] = useState(1);
   const [limit, setLimit] = useState(12);
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data: allProducts = [], isLoading: Loading } = useSWR<Product[]>(
-    `/api/products?page=${pageIndex}&limit=${limit}`,
-    () =>
-      axios
-        .get(`/api/products?page=${pageIndex}&limit=${limit}`)
-        .then((res) => {
-          setTotalProducts(res.data.totalProducts);
-          return res.data.products;
-        }),
+  const { data: Products, isLoading: Loading } = useSWR<{
+    products: Product[];
+    totalProducts: number;
+  }>(`/api/products?page=${pageIndex}&limit=${limit}`, () =>
+    axios.get(`/api/products?page=${pageIndex}&limit=${limit}`).then((res) => {
+      return res.data;
+    }),
   );
 
-  const totalPages = Math.ceil(totalProducts / limit);
+  const totalPages = Math.ceil((Products?.totalProducts ?? 0) / limit);
 
-  const allCategories = allProducts.map((product) => product.category);
+  const allCategories = Products?.products.map((product) => product.category);
   const categories = ["All", ...new Set(allCategories)];
 
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -45,7 +41,7 @@ const Products = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   // Filter products
-  const filteredProducts = allProducts
+  const filteredProducts = Products?.products
     .filter((product) => {
       const matchesCategory =
         selectedCategory === "All" || product.category === selectedCategory;
@@ -78,7 +74,7 @@ const Products = () => {
             </span>
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-slate-400 max-w-2xl">
-            Discover {allProducts.length} amazing products across{" "}
+            Discover {Products?.products.length} amazing products across{" "}
             {categories.length - 1} categories. Find exactly what you're looking
             for.
           </p>
@@ -127,7 +123,7 @@ const Products = () => {
             </select>
 
             <div className="hidden sm:block text-slate-300 text-xs sm:text-sm">
-              {filteredProducts.length} products
+              {filteredProducts?.length} products
             </div>
           </div>
 
@@ -171,9 +167,9 @@ const Products = () => {
         </div>
       ) : (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          {filteredProducts.length > 0 ? (
+          {(filteredProducts?.length ?? 0 > 0) ? (
             <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-              {filteredProducts.map((product) => (
+              {filteredProducts?.map((product) => (
                 <div
                   onClick={() => {
                     router.push(`/products/${product.id}`);
@@ -259,14 +255,12 @@ const Products = () => {
           .map((_, i) => (
             <button
               key={i}
-              // disabled={currentPage === i + 1}
               onClick={() => {
                 setPageIndex(i + 1);
-                setCurrentPage(i + 1);
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               className={`px-4 sm:px-6 py-2 sm:py-3 bg-blue-600  text-white rounded-lg font-semibold transition text-sm sm:text-base ${
-                currentPage === i + 1 ? "bg-blue-900" : "hover:bg-blue-700"
+                pageIndex === i + 1 ? "bg-blue-900" : "hover:bg-blue-700"
               }`}
             >
               {i + 1}
